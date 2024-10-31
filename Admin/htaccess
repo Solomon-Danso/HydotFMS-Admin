@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Redirect all requests to index.html except for actual files or directories
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Increase the maximum upload size
+php_value upload_max_filesize 200M
+php_value post_max_size 250M
+php_value memory_limit 320M
+php_value max_execution_time 300
+php_value max_input_time 300
