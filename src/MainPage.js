@@ -61,6 +61,8 @@ import CollectionAccount from './pages/BusinessOperation/CollectionAccount.jsx';
 import CollectionAccountHistory from './pages/BusinessOperation/CollectionAccountHistory.jsx';
 import Discount from './pages/Delivery/Discount.jsx';
 import Subscribe from './pages/Website/Subscribe.jsx';
+import WebsiteSetup from './pages/MainWebConfig/WebsiteSetup.jsx';
+import Sliders from './pages/MainWebConfig/Sliders.jsx';
 
 
 const MainPage = () => {
@@ -177,6 +179,13 @@ const MainPage = () => {
               <Routes>
                 {/* dashboard  */}
                 <Route path="DashBoard" element={(<DashBoard />)} />
+
+              {/*Main Website Configuration */}
+              <Route path="websiteSetup" element={(<WebsiteSetup />)} />
+              <Route path="sliders" element={(<Sliders />)} />
+
+
+
                 
                 {/* System Operations  */}     
                 <Route path="roles" element={(<Roles />)} />
