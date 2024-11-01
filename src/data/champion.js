@@ -8,7 +8,7 @@ import { RiAdminLine, RiContactsLine, RiStockLine } from 'react-icons/ri';
 import { MdDeleteForever, MdElectricBike, MdMenuOpen, MdOutlineAccountBalance, MdOutlineDashboard, MdOutlineDiscount, MdOutlineInventory, MdOutlineKeyOff, MdOutlineLocalPolice, MdOutlineSecurity, MdOutlineSupervisorAccount, MdWork, MdWorkspaces } from 'react-icons/md';
 import { HiOutlineRefresh } from 'react-icons/hi';
 import { TiTick } from 'react-icons/ti';
-import { GiConverseShoe, GiExpense, GiFireworkRocket, GiLouvrePyramid, GiMoneyStack, GiPublicSpeaker, GiReceiveMoney, GiSunkenEye, GiTakeMyMoney, GiWarlockEye } from 'react-icons/gi';
+import { GiConverseShoe, GiExpense, GiFireworkRocket, GiLouvrePyramid, GiMoneyStack, GiPublicSpeaker, GiReceiveMoney, GiSpanner, GiSunkenEye, GiTakeMyMoney, GiWarlockEye } from 'react-icons/gi';
 import { GrConfigure, GrDeliver, GrLocation, GrShieldSecurity } from 'react-icons/gr';
 import avatar from './avatar.jpg';
 import avatar2 from './avatar2.jpg';
@@ -21,22 +21,22 @@ import product4 from './product4.jpg';
 import product5 from './product5.jpg';
 import product6 from './product6.jpg';
 import product7 from './product7.jpg';
-import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { IoCarSportOutline, IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { FcGlobe, FcProcess } from "react-icons/fc";
 import { FaAmazonPay, FaBasketShopping, FaClipboardCheck, FaKey, FaPeoplePulling } from "react-icons/fa6";
 import { MdMarkEmailRead } from "react-icons/md";
-import { SiApacherocketmq, SiSecurityscorecard } from "react-icons/si";
+import { SiApacherocketmq, SiBloglovin, SiSecurityscorecard } from "react-icons/si";
 import { apiMedia, apiServer } from './Endpoint';
 import { isEditable } from '@syncfusion/ej2-react-grids';
 import { useNavigate } from 'react-router-dom';
 import { Show } from './Alerts';
 import { AES, enc } from 'crypto-js';
-import { LiaServerSolid } from "react-icons/lia";
+import { LiaCarSideSolid, LiaServerSolid } from "react-icons/lia";
 import { TbCategory2, TbTruckDelivery } from 'react-icons/tb';
 import "../pages/Delivery/modal.css"
 import { FormInputStudent } from './Profile';
-
-
+import { MdShoppingCart } from "react-icons/md";
+import { TfiLayoutSlider } from "react-icons/tfi";
 
 
 
@@ -1281,6 +1281,167 @@ export const links = [
   },
 
 
+//Website Configuration
+
+{
+  title: 'Website Configuration',
+  links: [
+
+    {
+      name: 'websiteSetup',
+      icon: <FcGlobe/>,
+      roles:[
+        {role:"Can_Create_Admin"}, 
+        {role: "Can_Update_Admin"}, 
+        {role:"Can_View_Single_Admin"},
+        {role:"Can_Block_Admin"}, 
+        {role: "Can_UnBlock_Admin"}, 
+        {role:"Can_Suspend_Admin"},
+        {role:"Can_UnSuspend_Admin"}, 
+        {role: "Can_View_All_Admin"}, 
+        {role:"Can_Delete_Admin"},
+        {role: "SuperAdmin"}, 
+      
+      ]
+    },
+
+   
+
+    {
+      name: 'sliders',
+      icon: <TfiLayoutSlider />,
+      roles:[
+        {role:"Can_Block_Customer"}, 
+        {role: "Can_UnBlock_Customer"}, 
+        {role:"Can_Suspend_Customer"},
+        {role:"Can_UnSuspend_Customer"}, 
+        {role: "Can_View_All_Customer"}, 
+        {role:"Can_Delete_Customer"},
+        {role: "SuperAdmin"}, 
+      
+      ]
+    },
+
+
+
+    {
+      name: 'explore',
+      icon: <IoCarSportOutline />,
+      roles:[
+        {role:"Can_Create_Admin"}, 
+        {role: "Can_Update_Admin"}, 
+        {role:"Can_View_Single_Admin"},
+        {role:"Can_Block_Admin"}, 
+        {role: "Can_UnBlock_Admin"}, 
+        {role:"Can_Suspend_Admin"},
+        {role:"Can_UnSuspend_Admin"}, 
+        {role: "Can_View_All_Admin"}, 
+        {role:"Can_Delete_Admin"},
+        {role: "SuperAdmin"}, 
+      
+      ]
+    },
+   
+    {
+      name: 'services',
+      icon: <GiSpanner />,
+      roles:[
+        {role:"Can_Create_Role"}, 
+        {role: "Can_View_Role"}, 
+        {role: "SuperAdmin"}, 
+      
+      ]
+    },
+
+    {
+      name: 'rentACar',
+      icon: <LiaCarSideSolid />,
+      roles:[
+        {role: "Can_View_Role"}, 
+        {role:"Can_Delete_Role"},
+        {role: "SuperAdmin"}, 
+      
+      ]
+    },
+
+    {
+      name: 'blogs',
+      icon: <SiBloglovin />,
+      roles:[
+        {role: "Can_View_Role"}, 
+        {role: "SuperAdmin"}, 
+      
+      ]
+    },
+
+    {
+      name: 'chats',
+      icon: <IoChatbubbleEllipsesOutline />,
+      roles:[
+        {role: "Can_View_Role"}, 
+        {role: "SuperAdmin"}, 
+      
+      ]
+    },
+
+    {
+      name: 'shopSetup',
+      icon: <MdShoppingCart />,
+      roles:[
+        {role: "Can_Configure_Website"}, 
+        {role: "SuperAdmin"}, 
+      
+      ]
+    },
+
+    
+
+
+  ],
+
+  permissions:[
+    {role: "SuperAdmin"},
+    {role:"Can_Block_Customer"}, 
+    {role: "Can_UnBlock_Customer"}, 
+    {role:"Can_Suspend_Customer"},
+    {role:"Can_UnSuspend_Customer"}, 
+    {role: "Can_View_All_Customer"}, 
+    {role:"Can_Delete_Customer"},
+    {role:"Can_Create_Admin"}, 
+    {role: "Can_Update_Admin"}, 
+    {role:"Can_View_Single_Admin"},
+    {role:"Can_Block_Admin"}, 
+    {role: "Can_UnBlock_Admin"}, 
+    {role:"Can_Suspend_Admin"},
+    {role:"Can_UnSuspend_Admin"}, 
+    {role: "Can_View_All_Admin"}, 
+    {role:"Can_Delete_Admin"},
+    {role:"Can_Create_Role"}, 
+    {role: "Can_View_Role"}, 
+    {role:"Can_Delete_Role"}, 
+    {role: "Can_Configure_Website"}, 
+    {role:"Can_Create_Admin"}, 
+    {role: "Can_Update_Admin"}, 
+    {role:"Can_View_Single_Admin"},
+    {role:"Can_Block_Admin"}, 
+    {role: "Can_UnBlock_Admin"}, 
+    {role:"Can_Suspend_Admin"},
+    {role:"Can_UnSuspend_Admin"}, 
+    {role: "Can_View_All_Admin"}, 
+    {role:"Can_Delete_Admin"},
+    {role: "Can_View_Audit_Trail"},  
+    {role:"Can_View_Customer_Trail"}, 
+    {role:"Can_View_Product_Assessment"}, 
+    {role:"Can_View_Rate_Limit_Catcher"}, 
+
+   ],
+
+
+
+
+},
+
+
 
   //Vehicle
   {
@@ -1688,7 +1849,7 @@ export const links = [
 
     //System Operations
     {
-      title: 'System Configurations',
+      title: 'System Administration',
       links: [
 
         {

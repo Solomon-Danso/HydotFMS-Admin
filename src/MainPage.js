@@ -182,7 +182,7 @@ const MainPage = () => {
                 <Route path="roles" element={(<Roles />)} />
                 <Route path="revokeRoles" element={(<RevokeRole />)} />
                 <Route path="viewRoles" element={(<ViewRole />)} />
-                <Route path="website" element={(<WebConfiguration />)} />
+                <Route path="shopSetup" element={(<WebConfiguration />)} />
                 <Route path="configurations" element={(<Configurations />)} />
 
                 {/* User Management  */}
