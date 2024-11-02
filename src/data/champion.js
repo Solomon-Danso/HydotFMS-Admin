@@ -956,6 +956,63 @@ const ManageSpecs = (props) => {
   );
 };
 
+const ManageServiceSpecs = (props) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
+      <div style={{ width: "calc(100% - 60px)" }}>
+      <p onClick={() => navigate(`/main/services/specs/${props.ProductId}`)} className="text-sm text-green-600">
+           Manage Specs
+       </p>
+      </div>
+    </div>
+  );
+};
+
+const ManageBlogSpecs = (props) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
+      <div style={{ width: "calc(100% - 60px)" }}>
+      <p onClick={() => navigate(`/main/blogs/specs/${props.ProductId}`)} className="text-sm text-green-600">
+           Manage Specs
+       </p>
+      </div>
+    </div>
+  );
+};
+
+
+const ManageRentACarSlides = (props) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
+      <div style={{ width: "calc(100% - 60px)" }}>
+      <p onClick={() => navigate(`/main/rentACar/${props.ProductId}`)} className="text-sm text-green-600">
+           Manage Slides
+       </p>
+      </div>
+    </div>
+  );
+};
+
+const ManageRentACarSpecs = (props) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
+      <div style={{ width: "calc(100% - 60px)" }}>
+      <p onClick={() => navigate(`/main/rentACar/specs/${props.ProductId}`)} className="text-sm text-green-600">
+           Manage Specs
+       </p>
+      </div>
+    </div>
+  );
+};
+
 
 
 export const productGrid =  [
@@ -988,6 +1045,44 @@ export const exploreGrid =  [
   { headerText: 'Add Specs',width: '150', template: ManageSpecs, textAlign: 'Center' },
 
   ];
+
+  export const rentACarGrid =  [
+    { field: 'ExploreId', headerText: 'Explore Id', width: '150', textAlign: 'Center' },
+    { headerText: 'Src', width: '100', template: ImageAndVideoGrid, textAlign: 'Center' },
+    { field: 'Title', headerText: 'Title', width: '150', textAlign: 'Center' },
+    { field: 'SubTitle', headerText: 'SubTitle', width: '150', textAlign: 'Center' },
+    { field: 'Price', headerText: 'Price', width: '150', textAlign: 'Center' },
+    { field: 'Year', headerText: 'Year', width: '150', textAlign: 'Center' },
+    { field: 'Gear', headerText: 'Gear', width: '150', textAlign: 'Center' },
+    { field: 'Fuel', headerText: 'Fuel', width: '150', textAlign: 'Center' },
+    { headerText: 'MainPic', width: '150', template: ImageAndVideoGrid, textAlign: 'Center' },
+  
+    { headerText: 'Add Slides',width: '150', template: ManageRentACarSlides, textAlign: 'Center' },
+    { headerText: 'Add Specs',width: '150', template: ManageRentACarSpecs, textAlign: 'Center' },
+  
+    ];
+  
+
+
+export const serviceGrid =  [
+  { field: 'ServiceId', headerText: 'Explore Id', width: '150', textAlign: 'Center' },
+  { headerText: 'Src', width: '100', template: ImageAndVideoGrid, textAlign: 'Center' },
+  { field: 'Title', headerText: 'Title', width: '150', textAlign: 'Center' },
+  { field: 'SubTitle', headerText: 'SubTitle', width: '150', textAlign: 'Center' },
+  { headerText: 'MainPic', width: '150', template: ImageAndVideoGrid, textAlign: 'Center' },
+  { headerText: 'Add Details',width: '150', template: ManageServiceSpecs, textAlign: 'Center' },
+
+  ];
+
+  export const blogGrid =  [
+    { field: 'BlogId', headerText: 'Explore Id', width: '150', textAlign: 'Center' },
+    { headerText: 'Src', width: '100', template: ImageAndVideoGrid, textAlign: 'Center' },
+    { field: 'Title', headerText: 'Title', width: '150', textAlign: 'Center' },
+    { field: 'SubTitle', headerText: 'SubTitle', width: '150', textAlign: 'Center' },
+    { headerText: 'MainPic', width: '150', template: ImageAndVideoGrid, textAlign: 'Center' },
+    { headerText: 'Add Details',width: '150', template: ManageBlogSpecs, textAlign: 'Center' },
+  
+    ];
 
 
 export const paymentMethodGrid =  [
@@ -1451,7 +1546,7 @@ export const links = [
     },
 
     {
-      name: 'chats',
+      name: 'mainChat',
       icon: <IoChatbubbleEllipsesOutline />,
       roles:[
         {role: "Can_View_Role"}, 

@@ -101,7 +101,7 @@ const navigate = useNavigate()
 
   return (
     <div>
-      <Header category="Emails" title="All Emails" />
+      <Header category="Website Configuration" title="All Messages" />
 
 
      

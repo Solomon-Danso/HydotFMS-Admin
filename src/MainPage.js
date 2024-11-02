@@ -66,6 +66,11 @@ import Sliders from './pages/MainWebConfig/Sliders.jsx';
 import Explore from './pages/MainWebConfig/Explore.jsx';
 import ExploreSlidesDetails from './pages/MainWebConfig/ExploreSlidesDetails.jsx';
 import ExploreSpecsDetails from './pages/MainWebConfig/ExploreSpecsDetails.jsx';
+import Service from './pages/MainWebConfig/Service.jsx';
+import RentACar from './pages/MainWebConfig/RentACar.jsx';
+import RentACarSlidesDetails from './pages/MainWebConfig/RentACarSlidesDetails.jsx';
+import RentACarSpecsDetails from './pages/MainWebConfig/RentACarSpecsDetails.jsx';
+import ServiceSpecsDetails from './pages/MainWebConfig/ServiceSpecsDetails.jsx';
 
 
 const MainPage = () => {
@@ -189,6 +194,13 @@ const MainPage = () => {
               <Route path="explore" element={(<Explore />)} />
               <Route path="explore/:exploreId" element={<ExploreSlidesDetails/>} />
               <Route path="explore/specs/:exploreId" element={<ExploreSpecsDetails/>} />
+              <Route path="services" element={(<Service />)} />
+              <Route path="services/specs/:serviceId" element={<ServiceSpecsDetails/>} />
+              <Route path="rentACar" element={(<RentACar />)} />
+              <Route path="rentACar/:rentACarId" element={<RentACarSlidesDetails/>} />
+              <Route path="rentACar/specs/:rentACarId" element={<RentACarSpecsDetails/>} />
+              <Route path="blogs" element={(<Service />)} />
+              <Route path="blogs/specs/:serviceId" element={<ServiceSpecsDetails/>} />
 
 
                 
