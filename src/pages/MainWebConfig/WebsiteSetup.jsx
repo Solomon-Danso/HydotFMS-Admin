@@ -7,36 +7,45 @@ import { apiServer } from '../../data/Endpoint';
 import { AES, enc } from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
 
-const Previewer = ({ preview, type }) => {
+const Previewer = ({ preview }) => {
+  if (!preview) return null;
+
+  // Check if the preview is for an image or video based on the data URL type
+  const isImage = preview.startsWith("data:image/");
+  const isVideo = preview.startsWith("data:video/");
+
   return (
-    <div>
-      {preview && (
-        <div style={{ marginTop: "1rem" }}>
-          {type === 'image' && (
-            <img src={preview} alt="Preview" style={{ maxWidth: "200px", maxHeight: "200px" }} />
-          )}
-          {type === 'video' && (
-            <video src={preview} controls style={{ maxWidth: "200px", maxHeight: "200px" }} />
-          )}
-        </div>
+    <div style={{ marginTop: "1rem" }}>
+      {isImage && (
+        <img src={preview} alt="Preview" style={{ width: "auto", maxHeight: "40vh" }} />
+      )}
+      {isVideo && (
+        <video src={preview} controls style={{ width: "auto", maxHeight: "40vh" }} />
+      )}
+      {!isImage && !isVideo && (
+        <p>Unsupported file format for preview</p>
       )}
     </div>
   );
 };
 
+
+
 const WebsiteSetup = () => {
   const [CompanyName, setCompanyName] = useState("");
-  const [Image1, setImage1] = useState("");
-  const [Image2, setImage2] = useState("");
-  const [Image3, setImage3] = useState("");
-  const [Video1, setVideo1] = useState("");
+  const [CompanyLogo, setCompanyLogo] = useState("");
+  const [ShopURL, setShopURL] = useState("");
+  const [Location, setLocation] = useState("");
+  const [PhoneNumber, setPhoneNumber] = useState("");
+  const [Email, setEmail] = useState("");
+  const [LinkedIn, setLinkedIn] = useState("");
   const [Whatsapp, setWhatsapp] = useState("");
   const [Instagram, setInstagram] = useState("");
   const [Facebook, setFacebook] = useState("");
   const [previewImage1, setPreviewImage1] = useState(null);
-  const [previewImage2, setPreviewImage2] = useState(null);
-  const [previewImage3, setPreviewImage3] = useState(null);
-  const [previewVideo, setPreviewVideo] = useState(null);
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
+
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({});
 
@@ -53,57 +62,86 @@ const WebsiteSetup = () => {
     }
   }, [navigate]);
 
+
   const handleCreateAdmin = async () => {
     Show.showLoading("Processing Data");
-    try {
-      const formData = new FormData();
-      formData.append("CompanyName", CompanyName);
-      formData.append("Image1", Image1);
-      formData.append("Image2", Image2);
-      formData.append("Image3", Image3);
-      formData.append("Video", Video1);
-      formData.append("Whatsapp", Whatsapp);
-      formData.append("Instagram", Instagram);
-      formData.append("Facebook", Facebook);
-      formData.append("AdminId", userInfo.UserId);
 
-      const response = await fetch(apiServer + "CreateWebsite", {
-        method: "POST",
-        headers: {
-          'UserId': userInfo.UserId,
-          'SessionId': userInfo.SessionId
-        },
-        body: formData
-      });
+    // Get the user's current location
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        setLatitude(latitude);
+        setLongitude(longitude);
 
-      const data = await response.json();
+        try {
+          const formData = new FormData();
+          formData.append("CompanyLogo", CompanyLogo);
+          formData.append("CompanyName", CompanyName);
+          formData.append("ShopURL", ShopURL);
+          formData.append("Location", Location);
+          formData.append("PhoneNumber", PhoneNumber);
+          formData.append("Email", Email);
+          formData.append("LinkedIn", LinkedIn);
+          formData.append("Whatsapp", Whatsapp);
+          formData.append("Instagram", Instagram);
+          formData.append("Facebook", Facebook);
+          formData.append("AdminId", userInfo.UserId);
+          formData.append("Latitude", latitude);
+          formData.append("Longitude", longitude);
 
-      if (response.ok) {
-        Show.hideLoading();
-        Show.Success(data.message);
-      } else {
-        Show.Attention(data.message);
+          const response = await fetch(apiServer + "WebsiteSetup", {
+            method: "POST",
+            headers: {
+              'UserId': userInfo.UserId,
+              'SessionId': userInfo.SessionId
+            },
+            body: formData
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            Show.hideLoading();
+            Show.Success(data.message);
+          } else {
+            Show.Attention(data.message);
+          }
+        } catch (error) {
+          Show.Attention("An error has occurred");
+        }
+      },
+      (error) => {
+        Show.Attention("Could not retrieve location");
+        console.error(error);
       }
-    } catch (error) {
-      Show.Attention("An error has occurred");
-    }
+    );
   };
-
-  const handleFileChange = (type, setter, previewSetter) => (e) => {
+  const handleFileChange = (setter, previewSetter) => (e) => {
     const file = e.target.files[0];
-
+  
     if (!file) return;
-
-    if (type === "image") {
+  
+    // Get the file extension
+    const fileExtension = file.name.split('.').pop().toLowerCase();
+  
+    // Define allowed image and video extensions
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
+    const videoExtensions = ['mp4', 'mov', 'avi', 'wmv', 'flv'];
+  
+    // Determine file type based on extension
+    const isImage = imageExtensions.includes(fileExtension);
+    const isVideo = videoExtensions.includes(fileExtension);
+  
+    if (isImage) {
       setter(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         previewSetter(reader.result);
       };
       reader.readAsDataURL(file);
-    }
-
-    if (type === "video") {
+    } 
+    
+    else if (isVideo) {
       const fileLimit = 30 * 1024 * 1024; // 30MB limit
       if (file.size > fileLimit) {
         Show.Attention("File size exceeds the limit (30MB)");
@@ -115,8 +153,16 @@ const WebsiteSetup = () => {
         };
         reader.readAsDataURL(file);
       }
+    } 
+    
+    else {
+      Show.Attention("Unsupported file format");
     }
+
+    
   };
+  
+ 
 
   return (
     <div>
@@ -127,14 +173,14 @@ const WebsiteSetup = () => {
           <AdmitStudentRole>
 
           <div>
-            <Previewer preview={previewImage1} type="image" />
+            <Previewer preview={previewImage1} />
               <FormLable style={{ color: localStorage.getItem("colorMode") }}>Company Logo</FormLable>
               <FormInputStudent
                 type="file"
                 required
                 placeholder=""
-                accept=".jpg, .png, .jpeg, .ico, .webp"
-                onChange={handleFileChange("image", setImage1, setPreviewImage1)}
+                accept=".jpg, .png, .jpeg, .ico, .webp, .mp4, .mov, .avi, .wmv, .flv"
+                onChange={handleFileChange(setCompanyLogo, setPreviewImage1)}
               />
            
             </div>
@@ -153,7 +199,7 @@ const WebsiteSetup = () => {
               <FormInputStudent
                 type="text"
                 placeholder=""
-                onChange={(e) => setCompanyName(e.target.value)}
+                onChange={(e) => setShopURL(e.target.value)}
               />
             </div>
 
@@ -162,7 +208,7 @@ const WebsiteSetup = () => {
               <FormInputStudent
                 type="text"
                 placeholder=""
-                onChange={(e) => setWhatsapp(e.target.value)}
+                onChange={(e) => setLocation(e.target.value)}
               />
             </div>
 
@@ -171,7 +217,7 @@ const WebsiteSetup = () => {
               <FormInputStudent
                 type="text"
                 placeholder=""
-                onChange={(e) => setWhatsapp(e.target.value)}
+                onChange={(e) => setPhoneNumber(e.target.value)}
               />
             </div>
 
@@ -180,7 +226,7 @@ const WebsiteSetup = () => {
               <FormInputStudent
                 type="text"
                 placeholder=""
-                onChange={(e) => setWhatsapp(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
            
@@ -195,7 +241,7 @@ const WebsiteSetup = () => {
             </div>
 
             <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Instagram</FormLable>
+              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Instagram (Username) </FormLable>
               <FormInputStudent
                 type="text"
                 placeholder=""
@@ -204,7 +250,7 @@ const WebsiteSetup = () => {
             </div>
 
             <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Facebook</FormLable>
+              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Facebook Profile Link</FormLable>
               <FormInputStudent
                 type="text"
                 placeholder=""
@@ -212,11 +258,11 @@ const WebsiteSetup = () => {
               />
             </div>
             <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}>LinkedIn</FormLable>
+              <FormLable style={{ color: localStorage.getItem("colorMode") }}>LinkedIn Profile Link</FormLable>
               <FormInputStudent
                 type="text"
                 placeholder=""
-                onChange={(e) => setFacebook(e.target.value)}
+                onChange={(e) => setLinkedIn(e.target.value)}
               />
             </div>
 
