@@ -156,6 +156,30 @@ const productGridImage = (props) => (
   </div>
 );
 
+const ImageAndVideoGrid = (props) => (
+  <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+    {props.fileType === "Video" ? (
+      <video
+        className="rounded-lg"
+        style={{ width: "300px", height: "300px", objectFit: "cover" }}
+        controls
+      >
+        <source src={apiMedia + props.Picture} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    ) : (
+      <img
+        className="rounded-full"
+        style={{ width: "200px", height: "200px", objectFit: "cover" }}
+        src={apiMedia + props.Picture}
+        alt="employee"
+      />
+    )}
+  </div>
+);
+
+
+
 
 const portfolioGridImage = (props) => (
   <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
@@ -896,8 +920,36 @@ const ProductImage = (props) => {
   return (
     <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
       <div style={{ width: "calc(100% - 60px)" }}>
-      <p onClick={() => navigate(`/main/product/${props.ProductId}`)} className="text-sm text-green-600">
-            Add
+      <p onClick={() => navigate(`/main/explore/${props.ProductId}`)} className="text-sm text-green-600">
+           Manage Slides
+       </p>
+      </div>
+    </div>
+  );
+};
+
+const ManageSlides = (props) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
+      <div style={{ width: "calc(100% - 60px)" }}>
+      <p onClick={() => navigate(`/main/explore/${props.ProductId}`)} className="text-sm text-green-600">
+           Manage Slides
+       </p>
+      </div>
+    </div>
+  );
+};
+
+const ManageSpecs = (props) => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
+      <div style={{ width: "calc(100% - 60px)" }}>
+      <p onClick={() => navigate(`/main/explore/specs/${props.ProductId}`)} className="text-sm text-green-600">
+           Manage Specs
        </p>
       </div>
     </div>
@@ -920,6 +972,24 @@ export const productGrid =  [
   { headerText: 'Delete',width: '50', template:DeleteProduct, textAlign: 'Center' },
 ];
 
+
+export const exploreGrid =  [
+  { field: 'ExploreId', headerText: 'Explore Id', width: '150', textAlign: 'Center' },
+  { headerText: 'Src', width: '100', template: ImageAndVideoGrid, textAlign: 'Center' },
+  { field: 'Title', headerText: 'Title', width: '150', textAlign: 'Center' },
+  { field: 'SubTitle', headerText: 'SubTitle', width: '150', textAlign: 'Center' },
+  { field: 'Price', headerText: 'Price', width: '150', textAlign: 'Center' },
+  { field: 'Year', headerText: 'Year', width: '150', textAlign: 'Center' },
+  { field: 'Gear', headerText: 'Gear', width: '150', textAlign: 'Center' },
+  { field: 'Fuel', headerText: 'Fuel', width: '150', textAlign: 'Center' },
+  { headerText: 'MainPic', width: '150', template: ImageAndVideoGrid, textAlign: 'Center' },
+
+  { headerText: 'Add Slides',width: '150', template: ManageSlides, textAlign: 'Center' },
+  { headerText: 'Add Specs',width: '150', template: ManageSpecs, textAlign: 'Center' },
+
+  ];
+
+
 export const paymentMethodGrid =  [
   { field: 'id', headerText: 'Method Id', width: '150', textAlign: 'Center' },
   { field: 'PaymentMethod', headerText: 'PaymentMethod', width: '150', textAlign: 'Center' },
@@ -935,13 +1005,19 @@ export const DeliveryConfigGrid =  [
 
 
 export const productImageGrid =  [
-  { field: 'Size', headerText: 'Size', width: '150', textAlign: 'Center' },
-
-  { headerText: 'Picture', width: '20', template: productGridImage, textAlign: 'Center' },
+   { headerText: 'Src', width: '120', template: ImageAndVideoGrid, textAlign: 'Center' },
   
-  { headerText: 'Delete',width: '20', template:DeleteImageProduct, textAlign: 'Center' },
+  { headerText: 'Delete',width: '100', template:DeleteImageProduct, textAlign: 'Center' },
 ];
 
+
+export const specsDetails =  [
+  { field: 'Section', headerText: 'Section', width: '150', textAlign: 'Center' },
+  { field: 'Title', headerText: 'Title', width: '150', textAlign: 'Center' },
+  { field: 'Description', headerText: 'Description', width: '150', textAlign: 'Center' },
+
+ { headerText: 'Delete',width: '100', template:DeleteImageProduct, textAlign: 'Center' },
+];
 
 
 export const inventoryGrid =  [

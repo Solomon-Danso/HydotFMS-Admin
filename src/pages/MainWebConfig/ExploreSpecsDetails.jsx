@@ -4,7 +4,7 @@ import Select from 'react-select';
 import styled from 'styled-components';
 import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable, FormTextAreaStudent } from '../../data/Profile';
 import { colors } from '../../data/Colors';
-import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, productGrid, products } from '../../data/champion';
+import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, exploreGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, productGrid, productImageGrid, products, specsDetails } from '../../data/champion';
 import { GridComponent, ContextMenu, Edit, ExcelExport, Filter, Page, PdfExport, Resize, Sort, ColumnDirective, ColumnsDirective, Inject } from '@syncfusion/ej2-react-grids';
 import { Header } from '../../components';
 import Selector from '../../data/Selector';
@@ -17,7 +17,7 @@ import { Search, Toolbar } from '@syncfusion/ej2-react-grids';
 
 
 
-const Sliders = () => {
+const ExploreSpecsDetails = () => {
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       try {
@@ -331,89 +331,28 @@ const handleDeleteAdmin = async (id) => {
   };
   
 const fileType = [
-    {id:1, name:"Image"},
-    {id:2, name:"Video"},
+    {id:1, name:"External"},
+    {id:2, name:"Internal"},
+    {id:3, name:"Lighting"},
+    {id:4, name:"Design"},
+    {id:5, name:"Performance"},
 ]
 
 
   return (
     <div>
-      <Header category="Website Configuration" title="Sliders" />
+      <Header category="Website Configuration" title="Explore" />
 
       <div className="wwd-row">
 
         <div className="card" style={{ backgroundColor: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>
-          <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add  Slider </div>
+          <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add  Explore Specification</div>
 
           <AdmitStudentRole>
 
-          <Selector placeholder="Select FileType" dataList={fileType} dataKey="name" dataValue="name" setMethod={(method) => setCategoryId(method)} />
+          <Selector placeholder="Select Section Type" dataList={fileType} dataKey="name" dataValue="name" setMethod={(method) => setCategoryId(method)} />
             
-            {
-                CategoryId=="Image"?<>
-                
-                
-                {previewImage && (
-              <div style={{ marginTop: "1rem" }}>
-                <img src={previewImage} alt="Preview" style={{ width: "auto", height: "40vh" }} />
-              </div>
-            )}
-      
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Picture</FormLable>
-              <FormInputStudent
-               type="file"
-               required
-               placeholder=""
-               accept=".jpg, .png, .jpeg, .ico, .webp"
-               onChange={handleImageChange}
-               
-              />
-            </div>
-
-                
-                
-                </>:<></>
-            }
-
-
-            {
-                CategoryId=="Video"?<>
-                
-                
-                {previewImage && (
-              <video
-              controls
-              width="200"
-              height="200"
-              src={previewImage}
-              style={{ width: "auto", height: "40vh" }}
-            >
-              Your browser does not support the video tag.
-            </video>
-            )}
-      
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Video</FormLable>
-              <FormInputStudent
-               type="file"
-               required
-               placeholder=""
-               accept=".mp4, .mov"
-               onChange={handleImageChange}
-               
-              />
-            </div>
-
-                
-                
-                </>:<></>
-            }
-
-
-            
-            
-            <div>
+          <div>
               <FormLable style={{ color: localStorage.getItem("colorMode") }}> Title</FormLable>
               <FormInputStudent
                type="text"
@@ -434,8 +373,6 @@ const fileType = [
                
               />
             </div>
-
-           
            
          
           </AdmitStudentRole>
@@ -449,25 +386,7 @@ const fileType = [
             >Add
           </AdmitButton3>
 
-          <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Enter Slider Id</FormLable>
-              <FormInputStudent
-                type="text"
-                required
-                placeholder=""
-                onChange={(e) => setProductId(e.target.value)}
-              />
-            </div>
-
-            <AdmitButton3
-            background={localStorage.getItem("colorMode")}
-            color="white"
-            border={localStorage.getItem("colorMode")}
-            style={{ marginBottom: "1rem" }}
-            onClick={()=>{ handleEditAdmin()}}
-            
-            >Edit
-          </AdmitButton3>
+         
 
 
 
@@ -486,7 +405,7 @@ const fileType = [
               fontSize: "1.5rem",
             }}
           >
-          Slider List
+          Explore List
           </u>
         </span>
 
@@ -505,7 +424,7 @@ const fileType = [
           style={{ backgroundColor: localStorage.getItem("colorMode") }}
         >
           <ColumnsDirective>
-            {productGrid.map((item, index) => (
+            {specsDetails.map((item, index) => (
               <ColumnDirective key={index} {...item} />
             ))}
           </ColumnsDirective>
@@ -517,4 +436,4 @@ const fileType = [
   );
 }
 
-export default Sliders;
+export default ExploreSpecsDetails;

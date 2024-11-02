@@ -63,6 +63,9 @@ import Discount from './pages/Delivery/Discount.jsx';
 import Subscribe from './pages/Website/Subscribe.jsx';
 import WebsiteSetup from './pages/MainWebConfig/WebsiteSetup.jsx';
 import Sliders from './pages/MainWebConfig/Sliders.jsx';
+import Explore from './pages/MainWebConfig/Explore.jsx';
+import ExploreSlidesDetails from './pages/MainWebConfig/ExploreSlidesDetails.jsx';
+import ExploreSpecsDetails from './pages/MainWebConfig/ExploreSpecsDetails.jsx';
 
 
 const MainPage = () => {
@@ -183,7 +186,9 @@ const MainPage = () => {
               {/*Main Website Configuration */}
               <Route path="websiteSetup" element={(<WebsiteSetup />)} />
               <Route path="sliders" element={(<Sliders />)} />
-
+              <Route path="explore" element={(<Explore />)} />
+              <Route path="explore/:exploreId" element={<ExploreSlidesDetails/>} />
+              <Route path="explore/specs/:exploreId" element={<ExploreSpecsDetails/>} />
 
 
                 
