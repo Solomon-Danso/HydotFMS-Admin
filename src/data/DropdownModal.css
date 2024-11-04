@@ -1,0 +1,27 @@
+
+.modal-content.open {
+    display: block; /* Show modal content */
+}
+
+.modal-content.close {
+    display: none; /* Hide modal content */
+}
+
+/* Keyframes for animations */
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-100%);
+    }
+}

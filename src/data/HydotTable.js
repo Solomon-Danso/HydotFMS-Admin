@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { apiMedia } from './Endpoint';
 import * as XLSX from 'xlsx';
 
-const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [] }) => { // Default to an empty array if not provided
+const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [], openModal,closeModal, modalState }) => { // Default to an empty array if not provided
   const navigate = useNavigate(); 
 
   const columns = propColumns.map((column) => ({
@@ -181,6 +181,11 @@ const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [
             <MRT_ToggleFiltersButton table={table} />
           </Flex>
           <Flex sx={{ gap: '8px' }}>
+
+          <Button color={!modalState?"blue":"red"} onClick={!modalState?openModal:closeModal} variant="filled">
+             {!modalState?"Modify Content":"Close"}
+            </Button>
+
             <Button color="yellow" onClick={exportToExcel} variant="filled">
               Export to Excel
             </Button>

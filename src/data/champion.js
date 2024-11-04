@@ -1056,23 +1056,6 @@ export const exploreGrid1 =  [
   ];
 
 
-  export const exploreGrid = [
-    { accessorKey: "id", header: "ID" },
-    { accessorKey: "ExploreID", header: "Explore ID" },
-    { accessorKey: "Src", header: "Source" },
-    { accessorKey: "Title", header: "Title" },
-    { accessorKey: "SubTitle", header: "Subtitle" },
-    { accessorKey: "Price", header: "Price" },
-    { accessorKey: "YearModel", header: "Year Model" },
-    { accessorKey: "GearType", header: "Gear Type" },
-    { accessorKey: "FuelType", header: "Fuel Type" },
-    { accessorKey: "DetailedPicture", header: "Detailed Picture" },
-  ];
-
-  export const exploreMediaGrid = [
-    { accessorKey: "Src", header: "Source" },
-    { accessorKey: "DetailedPicture", header: "Detailed Picture" },
-  ];
 
 
   

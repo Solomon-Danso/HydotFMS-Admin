@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import "../Website/Website.css";
-import Select from 'react-select';
-import styled from 'styled-components';
-import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable, FormTextAreaStudent } from '../../data/Profile';
-import { colors } from '../../data/Colors';
-import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, exploreGrid, exploreMediaGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, productGrid, products } from '../../data/champion';
-import { GridComponent, ContextMenu, Edit, ExcelExport, Filter, Page, PdfExport, Resize, Sort, ColumnDirective, ColumnsDirective, Inject } from '@syncfusion/ej2-react-grids';
+import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable } from '../../data/Profile';
 import { Header } from '../../components';
 import Selector from '../../data/Selector';
 import { Show } from '../../data/Alerts';
@@ -16,6 +11,7 @@ import { TfiLayoutSlider } from 'react-icons/tfi';
 import { FaCar } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import HydotTable from '../../data/HydotTable';
+import HydotModal from '../../data/HydotModal';
 
 
 
@@ -365,9 +361,43 @@ const menuItems = [
   },
 ];
 
+
+ const exploreGrid = [
+  { accessorKey: "id", header: "ID" },
+  { accessorKey: "ExploreID", header: "Explore ID" },
+  { accessorKey: "Src", header: "Source" },
+  { accessorKey: "Title", header: "Title" },
+  { accessorKey: "SubTitle", header: "Subtitle" },
+  { accessorKey: "Price", header: "Price" },
+  { accessorKey: "YearModel", header: "Year Model" },
+  { accessorKey: "GearType", header: "Gear Type" },
+  { accessorKey: "FuelType", header: "Fuel Type" },
+  { accessorKey: "DetailedPicture", header: "Detailed Picture" },
+];
+
+ const exploreMediaGrid = [
+  { accessorKey: "Src", header: "Source" },
+  { accessorKey: "DetailedPicture", header: "Detailed Picture" },
+];
+
+
+
+
+
+
 const testFunction = (id, ExploreID) =>{
 alert("Params Captured : "+id+" and "+ExploreID)
 }
+
+const [isModalOpen, setModalOpen] = useState(false);
+
+const handleOpenModal = () => {
+  setModalOpen(true);
+};
+
+const handleCloseModal = () => {
+  setModalOpen(false);
+};
 
 
 
@@ -375,204 +405,206 @@ alert("Params Captured : "+id+" and "+ExploreID)
     <div>
       <Header category="Website Configuration" title="Explore" />
 
-      <div className="wwd-row">
+     {
+      isModalOpen==true? <div className="wwd-row">
 
-        <div className="card" style={{ backgroundColor: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>
-          <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add  Explore </div>
+      <div className="card" style={{ backgroundColor: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>
+        <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add  Explore </div>
 
-          <AdmitStudentRole>
+        <AdmitStudentRole>
 
-          <Selector placeholder="Select CoverType" dataList={fileType} dataKey="name" dataValue="name" setMethod={(method) => setCoverType(method)} />
-            
-            {
-                CoverType=="Image"?<>
-                
-                
-                {previewImage && (
-              <div style={{ marginTop: "1rem" }}>
-                <img src={previewImage} alt="Preview" style={{ width: "auto", height: "40vh" }} />
-              </div>
-            )}
-      
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Cover</FormLable>
-              <FormInputStudent
-               type="file"
-               required
-               placeholder=""
-               accept=".jpg, .png, .jpeg, .ico, .webp"
-               onChange={handleImageChange}
-               
-              />
+        <Selector placeholder="Select CoverType" dataList={fileType} dataKey="name" dataValue="name" setMethod={(method) => setCoverType(method)} />
+          
+          {
+              CoverType=="Image"?<>
+              
+              
+              {previewImage && (
+            <div style={{ marginTop: "1rem" }}>
+              <img src={previewImage} alt="Preview" style={{ width: "auto", height: "40vh" }} />
             </div>
+          )}
+    
+          <div>
+            <FormLable style={{ color: localStorage.getItem("colorMode") }}> Cover</FormLable>
+            <FormInputStudent
+             type="file"
+             required
+             placeholder=""
+             accept=".jpg, .png, .jpeg, .ico, .webp"
+             onChange={handleImageChange}
+             
+            />
+          </div>
 
-                
-                
-                </>:<></>
-            }
-
-
-            {
-                CoverType=="Video"?<>
-                
-                
-                {previewImage && (
-              <video
-              controls
-              width="200"
-              height="200"
-              src={previewImage}
-              style={{ width: "auto", height: "40vh" }}
-            >
-              Your browser does not support the video tag.
-            </video>
-            )}
-      
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Cover</FormLable>
-              <FormInputStudent
-               type="file"
-               required
-               placeholder=""
-               accept=".mp4, .mov"
-               onChange={handleImageChange}
-               
-              />
-            </div>
-
-                
-                
-                </>:<></>
-            }
+              
+              
+              </>:<></>
+          }
 
 
-            
-            
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Title</FormLable>
-              <FormInputStudent
-               type="text"
+          {
+              CoverType=="Video"?<>
+              
+              
+              {previewImage && (
+            <video
+            controls
+            width="200"
+            height="200"
+            src={previewImage}
+            style={{ width: "auto", height: "40vh" }}
+          >
+            Your browser does not support the video tag.
+          </video>
+          )}
+    
+          <div>
+            <FormLable style={{ color: localStorage.getItem("colorMode") }}> Cover</FormLable>
+            <FormInputStudent
+             type="file"
+             required
+             placeholder=""
+             accept=".mp4, .mov"
+             onChange={handleImageChange}
+             
+            />
+          </div>
 
-               placeholder=""
-               onChange={(e) => setTitle(e.target.value)}
-               
-              />
-            </div>
+              
+              
+              </>:<></>
+          }
 
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> SubTitle</FormLable>
-              <FormInputStudent
-               type="text"
 
-               placeholder=""
-               onChange={(e) => setSubTitle(e.target.value)}
-               
-              />
-            </div>
+          
+          
+          <div>
+            <FormLable style={{ color: localStorage.getItem("colorMode") }}> Title</FormLable>
+            <FormInputStudent
+             type="text"
 
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Year Model</FormLable>
-              <FormInputStudent
-               type="text"
-
-               placeholder=""
-               onChange={(e) => setYearModel(e.target.value)}
-               
-              />
-            </div>
-
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Price</FormLable>
-              <FormInputStudent
-               type="number"
-
-               placeholder=""
-               onChange={(e) => setPrice(e.target.value)}
-               
-              />
-            </div>
-
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Gear Type</FormLable>
-              <FormInputStudent
-               type="text"
-
-               placeholder=""
-               onChange={(e) => setGearType(e.target.value)}
-               
-              />
-            </div>
-
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Fuel Type</FormLable>
-              <FormInputStudent
-               type="text"
-
-               placeholder=""
-               onChange={(e) => setFuelType(e.target.value)}
-               
-              />
-            </div>
-
-            {preview1Image && (
-              <div style={{ marginTop: "1rem" }}>
-                <img src={preview1Image} alt="Preview" style={{ width: "auto", height: "40vh" }} />
-              </div>
-            )}
-      
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Detailed Picture</FormLable>
-              <FormInputStudent
-               type="file"
-               required
-               placeholder=""
-               accept=".jpg, .png, .jpeg, .ico, .webp"
-               onChange={handleDImageChange}
-               
-              />
-            </div>
-
-           
-           
-         
-          </AdmitStudentRole>
-
-          <AdmitButton3
-            background={localStorage.getItem("colorMode")}
-            color="white"
-            border={localStorage.getItem("colorMode")}
-            style={{ marginBottom: "1rem" }}
-            onClick={()=>{ handleCreateAdmin()}}       
-            >Add
-          </AdmitButton3>
+             placeholder=""
+             onChange={(e) => setTitle(e.target.value)}
+             
+            />
+          </div>
 
           <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Enter Explore Id</FormLable>
-              <FormInputStudent
-                type="text"
-                required
-                placeholder=""
-                onChange={(e) => setExploreID(e.target.value)}
-              />
+            <FormLable style={{ color: localStorage.getItem("colorMode") }}> SubTitle</FormLable>
+            <FormInputStudent
+             type="text"
+
+             placeholder=""
+             onChange={(e) => setSubTitle(e.target.value)}
+             
+            />
+          </div>
+
+          <div>
+            <FormLable style={{ color: localStorage.getItem("colorMode") }}> Year Model</FormLable>
+            <FormInputStudent
+             type="text"
+
+             placeholder=""
+             onChange={(e) => setYearModel(e.target.value)}
+             
+            />
+          </div>
+
+          <div>
+            <FormLable style={{ color: localStorage.getItem("colorMode") }}> Price</FormLable>
+            <FormInputStudent
+             type="number"
+
+             placeholder=""
+             onChange={(e) => setPrice(e.target.value)}
+             
+            />
+          </div>
+
+          <div>
+            <FormLable style={{ color: localStorage.getItem("colorMode") }}> Gear Type</FormLable>
+            <FormInputStudent
+             type="text"
+
+             placeholder=""
+             onChange={(e) => setGearType(e.target.value)}
+             
+            />
+          </div>
+
+          <div>
+            <FormLable style={{ color: localStorage.getItem("colorMode") }}>Fuel Type</FormLable>
+            <FormInputStudent
+             type="text"
+
+             placeholder=""
+             onChange={(e) => setFuelType(e.target.value)}
+             
+            />
+          </div>
+
+          {preview1Image && (
+            <div style={{ marginTop: "1rem" }}>
+              <img src={preview1Image} alt="Preview" style={{ width: "auto", height: "40vh" }} />
             </div>
+          )}
+    
+          <div>
+            <FormLable style={{ color: localStorage.getItem("colorMode") }}> Detailed Picture</FormLable>
+            <FormInputStudent
+             type="file"
+             required
+             placeholder=""
+             accept=".jpg, .png, .jpeg, .ico, .webp"
+             onChange={handleDImageChange}
+             
+            />
+          </div>
 
-            <AdmitButton3
-            background={localStorage.getItem("colorMode")}
-            color="white"
-            border={localStorage.getItem("colorMode")}
-            style={{ marginBottom: "1rem" }}
-            onClick={()=>{ handleEditAdmin()}}
-            
-            >Edit
-          </AdmitButton3>
+         
+         
+       
+        </AdmitStudentRole>
+
+        <AdmitButton3
+          background={localStorage.getItem("colorMode")}
+          color="white"
+          border={localStorage.getItem("colorMode")}
+          style={{ marginBottom: "1rem" }}
+          onClick={()=>{ handleCreateAdmin()}}       
+          >Add
+        </AdmitButton3>
+
+        <div>
+            <FormLable style={{ color: localStorage.getItem("colorMode") }}>Enter Explore Id</FormLable>
+            <FormInputStudent
+              type="text"
+              required
+              placeholder=""
+              onChange={(e) => setExploreID(e.target.value)}
+            />
+          </div>
+
+          <AdmitButton3
+          background={localStorage.getItem("colorMode")}
+          color="white"
+          border={localStorage.getItem("colorMode")}
+          style={{ marginBottom: "1rem" }}
+          onClick={()=>{ handleEditAdmin()}}
+          
+          >Edit
+        </AdmitButton3>
 
 
-
-        </div>
-
-     
 
       </div>
+
+   
+
+    </div>:<></>
+     }
 
       <div style={{ marginTop: "2rem", padding: "1rem" }}>
         <span>
@@ -593,6 +625,9 @@ alert("Params Captured : "+id+" and "+ExploreID)
   media={exploreMediaGrid} 
   colorMode={localStorage.getItem("colorMode")}
   menuItems={menuItems}
+  openModal={()=>handleOpenModal()}
+  closeModal={()=>handleCloseModal()}
+  modalState = {isModalOpen}
 />;
 
        
