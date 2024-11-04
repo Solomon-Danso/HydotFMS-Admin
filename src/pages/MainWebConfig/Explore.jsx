@@ -4,7 +4,7 @@ import Select from 'react-select';
 import styled from 'styled-components';
 import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable, FormTextAreaStudent } from '../../data/Profile';
 import { colors } from '../../data/Colors';
-import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, exploreGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, productGrid, products } from '../../data/champion';
+import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, exploreGrid, exploreMediaGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, productGrid, products } from '../../data/champion';
 import { GridComponent, ContextMenu, Edit, ExcelExport, Filter, Page, PdfExport, Resize, Sort, ColumnDirective, ColumnsDirective, Inject } from '@syncfusion/ej2-react-grids';
 import { Header } from '../../components';
 import Selector from '../../data/Selector';
@@ -12,7 +12,10 @@ import { Show } from '../../data/Alerts';
 import { apiServer } from '../../data/Endpoint';
 import { AES, enc } from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
-import { Search, Toolbar } from '@syncfusion/ej2-react-grids';
+import { TfiLayoutSlider } from 'react-icons/tfi';
+import { FaCar } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
+import HydotTable from '../../data/HydotTable';
 
 
 
@@ -37,22 +40,23 @@ const Explore = () => {
   }, []);
 
 
-const [MenuList, setMenuList] = useState([])
-const [MenuId, setMenuId] = useState("")
-const [CategoryList, setCategoryList] = useState("")
+
 const [CategoryId, setCategoryId] = useState("")
-const [picture, setPicture] = useState("")
-const [ProductId, setProductId] = useState("")
-const [Title, setTitle] = useState("")
-const [Price, setPrice] = useState("")
-const [Quantity, setQuantity] = useState("")
-const [Size, setSize] = useState("")
-const [Description, setDescription] = useState("")
 const [previewImage, setPreviewImage] = useState(null); // For image preview
- 
+const [preview1Image, setPreview1Image] = useState(null); // For image preview
 
 
-
+const [Src, setSrc] = useState("")
+const [DetailedPicture, setDetailedPicture] = useState("")
+const [CoverType, setCoverType] = useState("")
+const [Title, setTitle] = useState("")
+const [SubTitle, setSubTitle] = useState("")
+const [YearModel, setYearModel] = useState("")
+const [Price, setPrice] = useState(0.0)
+const [GearType, setGearType] = useState("")
+const [FuelType, setFuelType] = useState("")
+const [Explore, setExplore] = useState([])
+const [ExploreID, setExploreID] = useState("")
 
 
   const [AdminList, setAdminList] = useState([])
@@ -102,12 +106,16 @@ fetch(apiServer+"ViewProductAdmin",{
 
 },[userInfo])
 
+const [ExploreIDExt, setExploreIDExt] = useState(""); // Ensure ExploreID is initialized
+
+
+
 useEffect(()=>{
 
     const formData = new FormData();
     formData.append("AdminId",userInfo.UserId)
   
-  fetch(apiServer+"ViewMenu",{
+  fetch(apiServer+"ViewAllExplore",{
     method: "POST",
         headers: {
           'UserId': userInfo.UserId,         
@@ -116,33 +124,17 @@ useEffect(()=>{
         body:formData
   })
   .then(res=>res.json())
-  .then(data=>setMenuList(data))
-  .catch(err=>console.error(err))
-  
-  
-  },[userInfo])
-
-
-
-  useEffect(()=>{
-
-    const formData = new FormData();
-    formData.append("AdminId",userInfo.UserId)
-  
-  fetch(apiServer+"ViewCategory",{
-    method: "POST",
-        headers: {
-          'UserId': userInfo.UserId,         
-          'SessionId': userInfo.SessionId    
-        },
-        body:formData
+  .then(data=>{
+    setExplore(data)
+    setExploreIDExt(data.ExploreID)
   })
-  .then(res=>res.json())
-  .then(data=>setCategoryList(data))
   .catch(err=>console.error(err))
   
   
   },[userInfo])
+
+
+
 
 
 
@@ -157,20 +149,20 @@ Show.showLoading("Processing Data");
 const formData = new FormData()
 
 formData.append("AdminId",userInfo.UserId)
-formData.append("MenuId",MenuId);
-formData.append("CategoryId",CategoryId);
-formData.append("Picture",picture);
+formData.append("Src",Src);
+formData.append("DetailedPicture",DetailedPicture);
+formData.append("CoverType",CoverType);
 formData.append("Title",Title);
 formData.append("Price",Price);
-formData.append("Quantity",Quantity);
-formData.append("Size",Size);
-formData.append("ProductId",ProductId);
-formData.append("Description",Description);
+formData.append("SubTitle",SubTitle);
+formData.append("YearModel",YearModel);
+formData.append("GearType",GearType);
+formData.append("FuelType",FuelType);
 
 
 
 
-    const response = await fetch(apiServer+"CreateProduct", {
+    const response = await fetch(apiServer+"CreateExplore", {
       method: "POST",
       headers: {
         'UserId': userInfo.UserId,         
@@ -210,15 +202,15 @@ Show.showLoading("Processing Data");
 
 const formData = new FormData()
 formData.append("AdminId",userInfo.UserId)
-formData.append("MenuId",MenuId);
-formData.append("CategoryId",CategoryId);
-formData.append("Picture",picture);
+formData.append("Src",Src);
+formData.append("DetailedPicture",DetailedPicture);
+formData.append("CoverType",CoverType);
 formData.append("Title",Title);
 formData.append("Price",Price);
-formData.append("Quantity",Quantity);
-formData.append("Size",Size);
-formData.append("ProductId",ProductId);
-formData.append("Description",Description);
+formData.append("SubTitle",SubTitle);
+formData.append("YearModel",YearModel);
+formData.append("GearType",GearType);
+formData.append("FuelType",FuelType);
 
 
     const response = await fetch(apiServer+"UpdateProduct", {
@@ -320,7 +312,7 @@ const handleDeleteAdmin = async (id) => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setPicture(file);
+    setSrc(file);
   
     // Preview the selected image
     const reader = new FileReader();
@@ -329,11 +321,54 @@ const handleDeleteAdmin = async (id) => {
     };
     reader.readAsDataURL(file);
   };
+
+  const handleDImageChange = (e) => {
+    const file = e.target.files[0];
+    setDetailedPicture(file);
+  
+    // Preview the selected image
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview1Image(reader.result);
+    };
+    reader.readAsDataURL(file);
+  };
   
 const fileType = [
     {id:1, name:"Image"},
     {id:2, name:"Video"},
 ]
+
+
+// Define the menu items array
+const menuItems = [
+  {
+    icon: <TfiLayoutSlider />,
+    text: "Add Sources",
+    type: "navigate",
+    path: `/main/explore/:ExploreID`, // Placeholder for the dynamic segment
+  },
+  {
+    icon: <FaCar />,
+    text: "Add Specifications",
+    type: "navigate",
+    path: `/main/explore/specs/:ExploreID`, // Placeholder for the dynamic segment
+  },
+  {
+    icon: <MdDelete />,
+    text: "Delete",
+    type: "function",
+    onClick: (id, ExploreID) => {
+      testFunction(id, ExploreID); // Assuming this function is defined in your component
+    },
+    columnNames: ['id', 'ExploreID'] // Specify the column name for the ID here
+  },
+];
+
+const testFunction = (id, ExploreID) =>{
+alert("Params Captured : "+id+" and "+ExploreID)
+}
+
 
 
   return (
@@ -347,10 +382,10 @@ const fileType = [
 
           <AdmitStudentRole>
 
-          <Selector placeholder="Select CoverType" dataList={fileType} dataKey="name" dataValue="name" setMethod={(method) => setCategoryId(method)} />
+          <Selector placeholder="Select CoverType" dataList={fileType} dataKey="name" dataValue="name" setMethod={(method) => setCoverType(method)} />
             
             {
-                CategoryId=="Image"?<>
+                CoverType=="Image"?<>
                 
                 
                 {previewImage && (
@@ -378,7 +413,7 @@ const fileType = [
 
 
             {
-                CategoryId=="Video"?<>
+                CoverType=="Video"?<>
                 
                 
                 {previewImage && (
@@ -419,7 +454,7 @@ const fileType = [
                type="text"
 
                placeholder=""
-               onChange={(e) => setProductId(e.target.value)}
+               onChange={(e) => setTitle(e.target.value)}
                
               />
             </div>
@@ -430,7 +465,7 @@ const fileType = [
                type="text"
 
                placeholder=""
-               onChange={(e) => setTitle(e.target.value)}
+               onChange={(e) => setSubTitle(e.target.value)}
                
               />
             </div>
@@ -441,7 +476,7 @@ const fileType = [
                type="text"
 
                placeholder=""
-               onChange={(e) => setTitle(e.target.value)}
+               onChange={(e) => setYearModel(e.target.value)}
                
               />
             </div>
@@ -452,7 +487,7 @@ const fileType = [
                type="number"
 
                placeholder=""
-               onChange={(e) => setTitle(e.target.value)}
+               onChange={(e) => setPrice(e.target.value)}
                
               />
             </div>
@@ -463,7 +498,7 @@ const fileType = [
                type="text"
 
                placeholder=""
-               onChange={(e) => setTitle(e.target.value)}
+               onChange={(e) => setGearType(e.target.value)}
                
               />
             </div>
@@ -474,14 +509,14 @@ const fileType = [
                type="text"
 
                placeholder=""
-               onChange={(e) => setTitle(e.target.value)}
+               onChange={(e) => setFuelType(e.target.value)}
                
               />
             </div>
 
-            {previewImage && (
+            {preview1Image && (
               <div style={{ marginTop: "1rem" }}>
-                <img src={previewImage} alt="Preview" style={{ width: "auto", height: "40vh" }} />
+                <img src={preview1Image} alt="Preview" style={{ width: "auto", height: "40vh" }} />
               </div>
             )}
       
@@ -492,7 +527,7 @@ const fileType = [
                required
                placeholder=""
                accept=".jpg, .png, .jpeg, .ico, .webp"
-               onChange={handleImageChange}
+               onChange={handleDImageChange}
                
               />
             </div>
@@ -517,7 +552,7 @@ const fileType = [
                 type="text"
                 required
                 placeholder=""
-                onChange={(e) => setProductId(e.target.value)}
+                onChange={(e) => setExploreID(e.target.value)}
               />
             </div>
 
@@ -552,31 +587,19 @@ const fileType = [
           </u>
         </span>
 
-        <GridComponent
-           id="gridcomp"
-      toolbar={['Search']}  // Add the search bar
- 
-          dataSource={AdminList}
-          enableHover={true}
-          allowPaging
-          allowSorting
-          allowExcelExport
-          allowPdfExport
-          contextMenuItems={contextMenuItems}
-          actionBegin={handleActionBegin}
-          style={{ backgroundColor: localStorage.getItem("colorMode") }}
-        >
-          <ColumnsDirective>
-            {exploreGrid.map((item, index) => (
-              <ColumnDirective key={index} {...item} />
-            ))}
-          </ColumnsDirective>
-          <Inject services={[Resize, Sort, ContextMenu, Filter, Page, ExcelExport, Edit, PdfExport, Search, Toolbar]} />
+        <HydotTable 
+  columns={exploreGrid} 
+  data={Explore} 
+  media={exploreMediaGrid} 
+  colorMode={localStorage.getItem("colorMode")}
+  menuItems={menuItems}
+/>;
 
-        </GridComponent>
+       
       </div>
     </div>
   );
 }
 
 export default Explore;
+

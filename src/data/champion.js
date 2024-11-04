@@ -21,7 +21,7 @@ import product4 from './product4.jpg';
 import product5 from './product5.jpg';
 import product6 from './product6.jpg';
 import product7 from './product7.jpg';
-import { IoCarSportOutline, IoChatbubbleEllipsesOutline } from "react-icons/io5";
+import { IoCarSportOutline, IoChatbubbleEllipsesOutline, IoEyeSharp } from "react-icons/io5";
 import { FcGlobe, FcProcess } from "react-icons/fc";
 import { FaAmazonPay, FaBasketShopping, FaClipboardCheck, FaKey, FaPeoplePulling } from "react-icons/fa6";
 import { MdMarkEmailRead } from "react-icons/md";
@@ -156,22 +156,30 @@ const productGridImage = (props) => (
   </div>
 );
 
+const productDGridImage = (props) => (
+  <div >
+    <img
+       style={{ width: "100px", height: "50px", }}
+      src={apiMedia+props.DetailedPicture}
+      alt="employee"
+    />
+  </div>
+);
+
 const ImageAndVideoGrid = (props) => (
   <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
-    {props.fileType === "Video" ? (
+    {props.CoverType === "Video" ? (
       <video
-        className="rounded-lg"
-        style={{ width: "300px", height: "300px", objectFit: "cover" }}
+        style={{ width: "auto", height: "100px", }}
         controls
       >
-        <source src={apiMedia + props.Picture} type="video/mp4" />
+        <source src={apiMedia + props.Src} type="video/mp4" />
         Your browser does not support the video tag.
       </video>
     ) : (
       <img
-        className="rounded-full"
-        style={{ width: "200px", height: "200px", objectFit: "cover" }}
-        src={apiMedia + props.Picture}
+        style={{ width: "100px", height: "50px", }}
+        src={apiMedia + props.Src}
         alt="employee"
       />
     )}
@@ -934,8 +942,8 @@ const ManageSlides = (props) => {
   return (
     <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
       <div style={{ width: "calc(100% - 60px)" }}>
-      <p onClick={() => navigate(`/main/explore/${props.ProductId}`)} className="text-sm text-green-600">
-           Manage Slides
+      <p onClick={() => navigate(`/main/explore/${props.ExploreID}`)} >
+       <IoEyeSharp Size={"4rem"}/>
        </p>
       </div>
     </div>
@@ -948,8 +956,8 @@ const ManageSpecs = (props) => {
   return (
     <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
       <div style={{ width: "calc(100% - 60px)" }}>
-      <p onClick={() => navigate(`/main/explore/specs/${props.ProductId}`)} className="text-sm text-green-600">
-           Manage Specs
+      <p onClick={() => navigate(`/main/explore/specs/${props.ExploreID}`)} >
+      <IoEyeSharp Size={"4rem"}/>
        </p>
       </div>
     </div>
@@ -1030,21 +1038,44 @@ export const productGrid =  [
 ];
 
 
-export const exploreGrid =  [
-  { field: 'ExploreId', headerText: 'Explore Id', width: '150', textAlign: 'Center' },
+export const exploreGrid1 =  [
+  { field: 'ExploreID', headerText: 'Explore Id', width: '150', textAlign: 'Center' },
   { headerText: 'Src', width: '100', template: ImageAndVideoGrid, textAlign: 'Center' },
   { field: 'Title', headerText: 'Title', width: '150', textAlign: 'Center' },
   { field: 'SubTitle', headerText: 'SubTitle', width: '150', textAlign: 'Center' },
   { field: 'Price', headerText: 'Price', width: '150', textAlign: 'Center' },
-  { field: 'Year', headerText: 'Year', width: '150', textAlign: 'Center' },
-  { field: 'Gear', headerText: 'Gear', width: '150', textAlign: 'Center' },
-  { field: 'Fuel', headerText: 'Fuel', width: '150', textAlign: 'Center' },
-  { headerText: 'MainPic', width: '150', template: ImageAndVideoGrid, textAlign: 'Center' },
+  { field: 'YearModel', headerText: 'Year', width: '150', textAlign: 'Center' },
+  { field: 'GearType', headerText: 'Gear', width: '150', textAlign: 'Center' },
+  { field: 'FuelType', headerText: 'Fuel', width: '150', textAlign: 'Center' },
+  { headerText: 'DetailedPicture', width: '100', template: productDGridImage, textAlign: 'Center' },
+
 
   { headerText: 'Add Slides',width: '150', template: ManageSlides, textAlign: 'Center' },
   { headerText: 'Add Specs',width: '150', template: ManageSpecs, textAlign: 'Center' },
 
   ];
+
+
+  export const exploreGrid = [
+    { accessorKey: "id", header: "ID" },
+    { accessorKey: "ExploreID", header: "Explore ID" },
+    { accessorKey: "Src", header: "Source" },
+    { accessorKey: "Title", header: "Title" },
+    { accessorKey: "SubTitle", header: "Subtitle" },
+    { accessorKey: "Price", header: "Price" },
+    { accessorKey: "YearModel", header: "Year Model" },
+    { accessorKey: "GearType", header: "Gear Type" },
+    { accessorKey: "FuelType", header: "Fuel Type" },
+    { accessorKey: "DetailedPicture", header: "Detailed Picture" },
+  ];
+
+  export const exploreMediaGrid = [
+    { accessorKey: "Src", header: "Source" },
+    { accessorKey: "DetailedPicture", header: "Detailed Picture" },
+  ];
+
+
+  
 
   export const rentACarGrid =  [
     { field: 'ExploreId', headerText: 'Explore Id', width: '150', textAlign: 'Center' },
