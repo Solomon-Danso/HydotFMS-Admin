@@ -182,9 +182,6 @@ const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [
           </Flex>
           <Flex sx={{ gap: '8px' }}>
 
-          <Button color={!modalState?"blue":"red"} onClick={!modalState?openModal:closeModal} variant="filled">
-             {!modalState?"Modify Content":"Close"}
-            </Button>
 
             <Button color="yellow" onClick={exportToExcel} variant="filled">
               Export to Excel
