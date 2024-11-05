@@ -77,7 +77,7 @@ const Sidebar = () => {
         <>
           <div className="flex justify-between items-center">
             <Link to="/main/DashBoard" onClick={handleCloseSideBar} className="items-center gap-3 ml-3 mt-4 flex text-xl font-extrabold tracking-tight dark:text-white text-slate-900">
-              <span>Hydot Commerce</span>
+              <span>Hydot FMS</span>
             </Link>
             <TooltipComponent content="Menu" position="BottomCenter">
               <button

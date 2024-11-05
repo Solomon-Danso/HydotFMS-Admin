@@ -228,11 +228,11 @@ const handleDeleteAdmin = async (id) => {
     try {
   
   const formData = new FormData()
-  formData.append("UserId", id) 
+  formData.append("ExploreID", id) 
   formData.append("AdminId",userInfo.UserId)
 
   
-      const response = await fetch(apiServer+"DeleteAdmin", {
+      const response = await fetch(apiServer+"DeletedExplore", {
         method: "POST",
         headers: {
           'UserId': userInfo.UserId,         
@@ -321,10 +321,10 @@ const menuItems = [
     icon: <MdDelete />,
     text: "Delete Details",
     type: "function",
-    onClick: (id, ExploreID) => {
-      testFunction(id, ExploreID); // Assuming this function is defined in your component
+    onClick: (ExploreID) => {
+      handleDeleteAdmin(ExploreID); // Assuming this function is defined in your component
     },
-    columnNames: ['id', 'ExploreID'] // Specify the column name for the ID here
+    columnNames: ['ExploreID'] // Specify the column name for the ID here
   },
 
   {
@@ -366,19 +366,6 @@ const menuItems = [
 
 
 
-const testFunction = (id, ExploreID) =>{
-alert("Params Captured : "+id+" and "+ExploreID)
-}
-
-const [isModalOpen, setModalOpen] = useState(false);
-
-const handleOpenModal = () => {
-  setModalOpen(true);
-};
-
-const handleCloseModal = () => {
-  setModalOpen(false);
-};
 
 const [activeStep, setActiveStep] = useState(0);
 const steps = ['Select Cover Type', 'Upload Images', 'Enter Details',  'Complete'];
@@ -527,7 +514,6 @@ const handleReset = () => {
             <FormLable style={{ color: localStorage.getItem("colorMode") }}> Price</FormLable>
             <FormInputStudent
              type="number"
-
              placeholder=""
              onChange={(e) => setPrice(e.target.value)}
              
@@ -576,7 +562,7 @@ const handleReset = () => {
                 border={localStorage.getItem("colorMode")}
                 onClick={handleCreateAdmin}
               >
-                Add
+                Submit
               </AdmitButton3>
             </div>
           )}
@@ -621,9 +607,7 @@ const handleReset = () => {
   media={exploreMediaGrid} 
   colorMode={localStorage.getItem("colorMode")}
   menuItems={menuItems}
-  openModal={()=>handleOpenModal()}
-  closeModal={()=>handleCloseModal()}
-  modalState = {isModalOpen}
+
 />;
 
        
