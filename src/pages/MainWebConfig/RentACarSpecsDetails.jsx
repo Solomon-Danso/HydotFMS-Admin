@@ -41,7 +41,7 @@ const Explore = () => {
     return () => observer.disconnect();
   }, []);
 
-const {exploreId} = useParams()
+const {rentACarId} = useParams()
 
 
 
@@ -92,7 +92,7 @@ useEffect(()=>{
     const formData = new FormData();
     formData.append("AdminId",userInfo.UserId)
   
-  fetch(apiServer+"ViewAllExploreSlide",{
+  fetch(apiServer+"ViewAllRentACarSpec",{
     method: "POST",
         headers: {
           'UserId': userInfo.UserId,         
@@ -126,13 +126,13 @@ const formData = new FormData()
 
 formData.append("AdminId",userInfo.UserId)
 formData.append("Description",SubTitle);
-formData.append("ExploreID",exploreId);
+formData.append("RentACarID",rentACarId);
 formData.append("Section",CoverType);
 formData.append("Title",Title);
 
 
 
-    const response = await fetch(apiServer+"CreateExploreSlide", {
+    const response = await fetch(apiServer+"CreateRentACarSpec", {
       method: "POST",
       headers: {
         'UserId': userInfo.UserId,         
@@ -173,12 +173,12 @@ const handleDeleteAdmin = async (Id, ExploreID) => {
     try {
   
   const formData = new FormData()
-  formData.append("ExploreID", ExploreID) 
+  formData.append("RentACarID", ExploreID) 
   formData.append("Id", Id) 
   formData.append("AdminId",userInfo.UserId)
 
   
-      const response = await fetch(apiServer+"DeletedExploreSlide", {
+      const response = await fetch(apiServer+"DeletedRentACarSpec", {
         method: "POST",
         headers: {
           'UserId': userInfo.UserId,         
@@ -227,10 +227,10 @@ const menuItems = [
     icon: <MdDelete />,
     text: "Delete Details",
     type: "function",
-    onClick: (id, ExploreID) => {
-      handleDeleteAdmin(id, ExploreID); // Assuming this function is defined in your component
+    onClick: (id, RentACarID) => {
+      handleDeleteAdmin(id, RentACarID); // Assuming this function is defined in your component
     },
-    columnNames: ['id','ExploreID'] // Specify the column name for the ID here
+    columnNames: ['id','RentACarID'] // Specify the column name for the ID here
   },
 
 
@@ -241,7 +241,7 @@ const menuItems = [
 
  const exploreGrid = [
   { accessorKey: "id", header: "ID" },
-  { accessorKey: "ExploreID", header: "Explore ID" },
+  { accessorKey: "RentACarID", header: "RentACar ID" },
   { accessorKey: "Section", header: "Section" },
   { accessorKey: "Title", header: "Title" },
   { accessorKey: "Description", header: "Description" },
@@ -289,7 +289,7 @@ const handleReset = () => {
 
   return (
     <div>
-      <Header category="Website Configuration" title="Explore Specifications" />
+      <Header category="Website Configuration" title="RentACar Specifications" />
 
 
 
@@ -404,7 +404,7 @@ const handleReset = () => {
               fontSize: "1.5rem",
             }}
           >
-          Explore Specification List
+          RentACar Specification List
           </u>
         </span>
 
