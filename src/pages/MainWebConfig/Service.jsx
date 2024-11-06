@@ -46,14 +46,10 @@ const Service = () => {
 const [previewImage, setPreviewImage] = useState(null); // For image preview
 
 const [Src, setSrc] = useState("")
-const [DetailedPicture, setDetailedPicture] = useState("")
 const [CoverType, setCoverType] = useState("")
 const [Title, setTitle] = useState("")
 const [SubTitle, setSubTitle] = useState("")
-const [YearModel, setYearModel] = useState("")
-const [Price, setPrice] = useState(0.0)
-const [GearType, setGearType] = useState("")
-const [FuelType, setFuelType] = useState("")
+const [Description, setDescription] = useState("")
 const [Explore, setExplore] = useState([])
 
 
@@ -91,7 +87,7 @@ useEffect(()=>{
     const formData = new FormData();
     formData.append("AdminId",userInfo.UserId)
   
-  fetch(apiServer+"ViewAllExplore",{
+  fetch(apiServer+"ViewAllService",{
     method: "POST",
         headers: {
           'UserId': userInfo.UserId,         
@@ -125,19 +121,15 @@ const formData = new FormData()
 
 formData.append("AdminId",userInfo.UserId)
 formData.append("Src",Src);
-formData.append("DetailedPicture",DetailedPicture);
 formData.append("CoverType",CoverType);
 formData.append("Title",Title);
-formData.append("Price",Price);
+formData.append("Description",Description);
 formData.append("SubTitle",SubTitle);
-formData.append("YearModel",YearModel);
-formData.append("GearType",GearType);
-formData.append("FuelType",FuelType);
 
 
 
 
-    const response = await fetch(apiServer+"CreateExplore", {
+    const response = await fetch(apiServer+"CreateServices", {
       method: "POST",
       headers: {
         'UserId': userInfo.UserId,         
@@ -178,18 +170,14 @@ Show.showLoading("Processing Data");
 const formData = new FormData()
 formData.append("AdminId",userInfo.UserId)
 formData.append("Src",Src);
-formData.append("DetailedPicture",DetailedPicture);
 formData.append("CoverType",CoverType);
 formData.append("Title",Title);
-formData.append("Price",Price);
+formData.append("Description",Description);
 formData.append("SubTitle",SubTitle);
-formData.append("YearModel",YearModel);
-formData.append("GearType",GearType);
-formData.append("FuelType",FuelType);
-formData.append("ExploreID",ExploreID);
+formData.append("ServiceID",ExploreID);
 
 
-    const response = await fetch(apiServer+"UpdateExplore", {
+    const response = await fetch(apiServer+"UpdateServices", {
       method: "POST",
       headers: {
         'UserId': userInfo.UserId,         
@@ -232,7 +220,7 @@ const handleDeleteAdmin = async (id) => {
   formData.append("AdminId",userInfo.UserId)
 
   
-      const response = await fetch(apiServer+"DeletedExplore", {
+      const response = await fetch(apiServer+"DeletedService", {
         method: "POST",
         headers: {
           'UserId': userInfo.UserId,         
@@ -285,17 +273,7 @@ const handleDeleteAdmin = async (id) => {
     reader.readAsDataURL(file);
   };
 
-  const handleDImageChange = (e) => {
-    const file = e.target.files[0];
-    setDetailedPicture(file);
-  
-    // Preview the selected image
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewImage(reader.result);
-    };
-    reader.readAsDataURL(file);
-  };
+
   
 const fileType = [
     {id:1, name:"Image"},
@@ -345,20 +323,16 @@ const menuItems = [
 
  const exploreGrid = [
   { accessorKey: "id", header: "ID" },
-  { accessorKey: "ExploreID", header: "Explore ID" },
+  { accessorKey: "ServiceID", header: "Service ID" },
   { accessorKey: "Src", header: "Source" },
   { accessorKey: "Title", header: "Title" },
   { accessorKey: "SubTitle", header: "Subtitle" },
-  { accessorKey: "Price", header: "Price" },
-  { accessorKey: "YearModel", header: "Year Model" },
-  { accessorKey: "GearType", header: "Gear Type" },
-  { accessorKey: "FuelType", header: "Fuel Type" },
-  { accessorKey: "DetailedPicture", header: "Detailed Picture" },
+  { accessorKey: "Description", header: "Description" },
+
 ];
 
  const exploreMediaGrid = [
   { accessorKey: "Src", header: "Source" },
-  { accessorKey: "DetailedPicture", header: "Detailed Picture" },
 ];
 
 
@@ -381,7 +355,7 @@ const handleCloseModal = () => {
 };
 
 const [activeStep, setActiveStep] = useState(0);
-const steps = ['Select Cover Type', 'Upload Images', 'Enter Details',  'Complete'];
+const steps = ['Select Cover Type', 'Upload Media', 'Enter Details',  'Complete'];
 
 const getStepIcon = (step) => {
   switch (step) {
@@ -434,7 +408,7 @@ const handleReset = () => {
         <Box sx={{ padding: 3 }}>
           {activeStep === 0 && (
             <div>
-              <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add Explore</div>
+              <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add Service</div>
               <Selector
                 placeholder="Select CoverType"
                 dataList={fileType}
@@ -512,16 +486,21 @@ const handleReset = () => {
             />
           </div>
 
+          <div>
+            <FormLable style={{ color: localStorage.getItem("colorMode") }}> Description</FormLable>
+            <FormInputStudent
+             type="text"
+             placeholder=""
+             onChange={(e) => setDescription(e.target.value)}
+             
+            />
+          </div>
+
         
 
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Detailed Picture</FormLable>
-              <FormInputStudent
-                type="file"
-                required
-                placeholder=""
-                accept=".jpg, .png, .jpeg, .ico, .webp"
-                onChange={handleDImageChange}
-              />
+        
+
+
             </div>
           )}
 
@@ -534,7 +513,7 @@ const handleReset = () => {
                 border={localStorage.getItem("colorMode")}
                 onClick={handleCreateAdmin}
               >
-                Add
+               Submit
               </AdmitButton3>
             </div>
           )}

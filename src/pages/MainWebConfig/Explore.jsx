@@ -368,7 +368,7 @@ const menuItems = [
 
 
 const [activeStep, setActiveStep] = useState(0);
-const steps = ['Select Cover Type', 'Upload Images', 'Enter Details',  'Complete'];
+const steps = ['Select Cover Type', 'Upload Media', 'Enter Details',  'Complete'];
 
 const getStepIcon = (step) => {
   switch (step) {
