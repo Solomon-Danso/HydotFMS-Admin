@@ -313,10 +313,13 @@ const handleReset = () => {
 <div className="wwd-row">
       <div className="card" style={{ backgroundColor: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white", padding: "2rem" }}>
         
-        <Stepper activeStep={activeStep} alternativeLabel sx={{ padding: '2rem 0' }}>
+       <Stepper activeStep={activeStep} alternativeLabel sx={{ padding: '2rem 0' }}>
           {steps.map((label, index) => (
             <Step key={label}>
-              <StepLabel StepIconComponent={() => getStepIcon(index)}>{label}</StepLabel>
+              <StepLabel sx={{ color: localStorage.getItem("themeMode") === "Light" ? "orange" : "blue" }} StepIconComponent={() => getStepIcon(index)} >
+               <span style={{ color: localStorage.getItem("themeMode") === "Light" ? "orange" : "blue" }}>{label}</span> 
+                
+                </StepLabel>
             </Step>
           ))}
         </Stepper>
@@ -383,7 +386,9 @@ const handleReset = () => {
 
         {activeStep === 2 && (
             <div>
-              <Typography>All steps completed. Ready to submit.</Typography>
+              <Typography>
+              <span style={{ color: localStorage.getItem("themeMode") === "Light" ? "orange" : "blue" }}> All steps completed. Ready to submit.</span> 
+               </Typography>
               <AdmitButton3
                 background={localStorage.getItem("colorMode")}
                 color="white"
