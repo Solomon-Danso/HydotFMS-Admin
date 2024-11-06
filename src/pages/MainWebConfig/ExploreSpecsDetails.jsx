@@ -165,7 +165,7 @@ formData.append("Title",Title);
 
 
 
-const handleDeleteAdmin = async (id) => {
+const handleDeleteAdmin = async (Id, ExploreID) => {
 
  
 
@@ -173,11 +173,12 @@ const handleDeleteAdmin = async (id) => {
     try {
   
   const formData = new FormData()
-  formData.append("ExploreID", id) 
+  formData.append("ExploreID", ExploreID) 
+  formData.append("Id", Id) 
   formData.append("AdminId",userInfo.UserId)
 
   
-      const response = await fetch(apiServer+"DeletedExplore", {
+      const response = await fetch(apiServer+"DeletedExploreSlide", {
         method: "POST",
         headers: {
           'UserId': userInfo.UserId,         
@@ -226,10 +227,10 @@ const menuItems = [
     icon: <MdDelete />,
     text: "Delete Details",
     type: "function",
-    onClick: (ExploreID) => {
-      handleDeleteAdmin(ExploreID); // Assuming this function is defined in your component
+    onClick: (id, ExploreID) => {
+      handleDeleteAdmin(id, ExploreID); // Assuming this function is defined in your component
     },
-    columnNames: ['ExploreID'] // Specify the column name for the ID here
+    columnNames: ['id','ExploreID'] // Specify the column name for the ID here
   },
 
 
