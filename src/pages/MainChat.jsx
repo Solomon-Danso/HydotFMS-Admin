@@ -8,7 +8,7 @@ import { AES, enc } from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
 import { TfiLayoutSlider } from 'react-icons/tfi';
 import { FaCar, FaEdit } from 'react-icons/fa';
-import { MdDelete } from 'react-icons/md';
+import { MdDelete, MdPreview } from 'react-icons/md';
 import HydotTable from '../data/HydotTable';
 import {
   Stepper, Step, StepLabel, Button, Typography, Box
@@ -111,7 +111,9 @@ useEffect(() => {
 
 
 
-
+const SourceViewer = (MessageLink) =>{
+window.open(MessageLink)
+}
 
 
 
@@ -126,7 +128,17 @@ const menuItems = [
     text: "Reply Now",
     type: "navigate",
     path: `/main/instantReply/:EmailId`, // Placeholder for the dynamic segment
-  }
+  },
+
+  {
+    icon: <MdPreview />,
+    text: "Visit URL",
+    type: "function",
+    onClick: (ExploreID) => {
+      SourceViewer(ExploreID); // Assuming this function is defined in your component
+    },
+    columnNames: ['MessageLink'] // Specify the column name for the ID here
+  },
 
 
 
