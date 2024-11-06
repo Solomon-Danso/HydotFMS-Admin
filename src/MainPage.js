@@ -71,6 +71,8 @@ import RentACar from './pages/MainWebConfig/RentACar.jsx';
 import RentACarSlidesDetails from './pages/MainWebConfig/RentACarSlidesDetails.jsx';
 import RentACarSpecsDetails from './pages/MainWebConfig/RentACarSpecsDetails.jsx';
 import ServiceSpecsDetails from './pages/MainWebConfig/ServiceSpecsDetails.jsx';
+import Blog from './pages/MainWebConfig/Blog.jsx';
+import BlogSpecsDetails from './pages/MainWebConfig/BlogSpecsDetails.jsx';
 
 
 const MainPage = () => {
@@ -199,8 +201,8 @@ const MainPage = () => {
               <Route path="rentACar" element={(<RentACar />)} />
               <Route path="rentACar/:rentACarId" element={<RentACarSlidesDetails/>} />
               <Route path="rentACar/specs/:rentACarId" element={<RentACarSpecsDetails/>} />
-              <Route path="blogs" element={(<Service />)} />
-              <Route path="blogs/specs/:serviceId" element={<ServiceSpecsDetails/>} />
+              <Route path="blogs" element={(<Blog />)} />
+              <Route path="blogs/specs/:blogID" element={<BlogSpecsDetails/>} />
 
 
                 

@@ -1,25 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import "./Website/Website.css";
-import Select from 'react-select';
-import styled from 'styled-components';
-import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable } from './../data/Profile';
-import { colors } from './../data/Colors';
-import { auditTrialGrid, chatGrid, clientApiGrid, contextMenuItems, countryList, customers, emailData, emailGrid, paymentGrid, paymentMethod, paymentReference, products, visitorsGrid } from './../data/champion';
-import { GridComponent, ContextMenu, Edit, ExcelExport, Filter, Page, PdfExport, Resize, Sort, ColumnDirective, ColumnsDirective, Inject } from '@syncfusion/ej2-react-grids';
-import { Header } from './../components';
-import Selector from './../data/Selector';
+import { Header } from '../components';
+import Selector from '../data/Selector';
 import { Show } from '../data/Alerts';
 import { apiServer } from '../data/Endpoint';
-import { useNavigate } from 'react-router-dom';
 import { AES, enc } from 'crypto-js';
-import { Search, Toolbar } from '@syncfusion/ej2-react-grids';
+import { useNavigate } from 'react-router-dom';
+import { TfiLayoutSlider } from 'react-icons/tfi';
+import { FaCar, FaEdit } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
+import HydotTable from '../data/HydotTable';
+import {
+  Stepper, Step, StepLabel, Button, Typography, Box
+} from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import VideoLabelIcon from '@mui/icons-material/VideoLabel';
+import { GiBookCover } from "react-icons/gi";
+import { AdmitButton3, FormInputStudent, FormLable } from '../data/Profile';
+import { IoChatbubbleEllipsesOutline } from 'react-icons/io5';
 
 
 
-const MainChat = () => {
 
-
-  
+const Explore = () => {
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       try {
@@ -38,35 +42,36 @@ const MainChat = () => {
     return () => observer.disconnect();
   }, []);
 
-  const editing = { allowDeleting: true, allowEditing: true };
 
 
-const navigate = useNavigate()
 
-  const [userInfo, setUserInfo] = useState({});
 
-  useEffect(() => {
-   try{
-  
-  
-     const encryptedData = sessionStorage.getItem("userDataEnc");
-     const encryptionKey = '$2a$11$3lkLrAOuSzClGFmbuEAYJeueRET0ujZB2TkY9R/E/7J1Rr2u522CK';
-     const decryptedData = AES.decrypt(encryptedData, encryptionKey);
-     const decryptedString = decryptedData.toString(enc.Utf8);
-     const parsedData = JSON.parse(decryptedString);
-       setUserInfo(parsedData);
-  
-  
-   }catch(error){
-    navigate("/")
-   }
-  
-  }, []);
-  const handleEdit = (id) => {
-    console.log('Edit entry ID:', id);
-  };
 
-  
+
+  const navigate = useNavigate()
+
+const [userInfo, setUserInfo] = useState({});
+
+useEffect(() => {
+ try{
+
+
+   const encryptedData = sessionStorage.getItem("userDataEnc");
+   const encryptionKey = '$2a$11$3lkLrAOuSzClGFmbuEAYJeueRET0ujZB2TkY9R/E/7J1Rr2u522CK';
+   const decryptedData = AES.decrypt(encryptedData, encryptionKey);
+   const decryptedString = decryptedData.toString(enc.Utf8);
+   const parsedData = JSON.parse(decryptedString);
+     setUserInfo(parsedData);
+
+
+ }catch(error){
+  navigate("/")
+ }
+
+}, []);
+
+
+
 
   const [Audit, setAudit] = useState([]);
 
@@ -81,18 +86,72 @@ const navigate = useNavigate()
       })
         .then(res => res.json())
         .then(data => {
-    
           if (data.chats !== undefined) {
-            setAudit(data.chats);
+            const formattedChats = data.chats.map(chat => ({
+              ...chat,
+              isReplied: chat.isReplied === 1 ? "Replied" : "Not Replied",
+              created_at: new Date(chat.created_at).toLocaleString('en-GB', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: 'numeric',
+                hour12: true
+              }).replace(',', '') // to remove the comma after the date
+            }));
+            setAudit(formattedChats);
           } else {
             console.error("Unexpected response format:", data);
           }
-         
-          
         })
         .catch(error => console.error(error));
     }
   }, [userInfo, apiServer]);
+  
+
+
+
+
+
+
+
+
+
+
+
+// Define the menu items array
+const menuItems = [
+  {
+    icon: <IoChatbubbleEllipsesOutline />,
+    text: "Reply Now",
+    type: "navigate",
+    path: `/main/instantReply/:EmailId`, // Placeholder for the dynamic segment
+  }
+
+
+
+
+];
+
+
+ const exploreGrid = [
+  { accessorKey: "id", header: "ID" },
+  { accessorKey: "EmailId", header: "Email ID" },
+  { accessorKey: "Purpose", header: "Purpose" },
+  { accessorKey: "FullName", header: "FullName" },
+  { accessorKey: "Email", header: "Email" },
+  { accessorKey: "Message", header: "Message" },
+  { accessorKey: "isReplied", header: "isReplied" },
+  { accessorKey: "created_at", header: "Date" },
+ ];
+
+ const exploreMediaGrid = [
+  { accessorKey: "Src", header: "Source" },
+  { accessorKey: "DetailedPicture", header: "Detailed Picture" },
+];
+
+
+
 
 
 
@@ -101,36 +160,36 @@ const navigate = useNavigate()
 
   return (
     <div>
-      <Header category="Website Configuration" title="All Messages" />
+      <Header category="Website Configuration" title="MainChat" />
 
 
-     
-<div style={{marginTop:"5rem"}}>
+      <div style={{ marginTop: "2rem", padding: "1rem" }}>
+        <span>
+          <u
+            style={{
+              color: localStorage.getItem("colorMode"),
+              textAlign: "center",
+              fontSize: "1.5rem",
+            }}
+          >
+          All Messages
+          </u>
+        </span>
 
-<GridComponent
-       id="gridcomp"
-      toolbar={['Search']}  // Add the search bar
-      dataSource={Audit}
-      allowPaging
-      allowSorting
-      allowExcelExport
-      allowPdfExport
-      contextMenuItems={contextMenuItems}
-      editSettings={editing}
-      style={{ backgroundColor: localStorage.getItem("colorMode") }}
-    >
-      <ColumnsDirective>
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-        {chatGrid.map((item, index) => <ColumnDirective key={index} {...item} />)}
-      </ColumnsDirective>
-      <Inject services={[Resize, Sort, ContextMenu, Filter, Page, ExcelExport, Edit, PdfExport, Search, Toolbar]} />
-    </GridComponent>
+        <HydotTable 
+  columns={exploreGrid} 
+  data={Audit} 
+  media={exploreMediaGrid} 
+  colorMode={localStorage.getItem("colorMode")}
+  menuItems={menuItems}
 
-</div>
-     
+/>;
 
+       
+      </div>
     </div>
   );
 }
 
-export default MainChat;
+export default Explore;
+

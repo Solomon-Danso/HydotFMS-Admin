@@ -384,7 +384,7 @@ const handleReset = () => {
               fontSize: "1.5rem",
             }}
           >
-          Explore Specification List
+          Service Specification List
           </u>
         </span>
 
