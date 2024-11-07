@@ -27,6 +27,8 @@ import { IoChatbubbleEllipsesOutline } from "react-icons/io5";
 import { MdMarkEmailRead } from "react-icons/md";
 import { GrShieldSecurity } from 'react-icons/gr';
 import { SiSecurityscorecard } from 'react-icons/si';
+import "./Dashboard.css"
+
 
 const DropDown = ({ currentMode }) => (
   <div className="w-28 border-1 border-color px-2 py-1 rounded-md">
@@ -482,6 +484,59 @@ const [thisYearSales, setThisYearSales] = useState(0);
         .catch(error => console.error(error));
     }
   }, [userInfo, apiServer]);
+
+
+  const [hasPermission, setHasPermission] = useState(null); // Track permission status
+
+  useEffect(() => {
+    if (userInfo.UserId && userInfo.SessionId) {
+      const authenticateRouteView = async () => {
+        try {
+          const formData = new FormData();
+          formData.append("AdminId", userInfo.UserId);
+          formData.append("Role", "Can_Access_Dashboard");
+
+          const response = await fetch(apiServer + "RouteViewAuthenticator", {
+            method: "POST",
+            headers: {
+              'UserId': userInfo.UserId,
+              'SessionId': userInfo.SessionId,
+            },
+            body: formData,
+          });
+
+          if (!response.ok) {
+            setHasPermission(false); // User doesn't have permission
+          } else {
+            setHasPermission(true); // User has permission
+          }
+        } catch (error) {
+          console.log("An error has occurred");
+          setHasPermission(false); // Assume no permission on error
+        }
+      };
+
+      authenticateRouteView();
+    }
+  }, [userInfo]);
+;
+
+  if (hasPermission === null) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div className="spinner"></div>
+      </div>
+    );
+  }
+
+  // If user doesn't have permission, display message only
+  if (hasPermission === false) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <span>You don't have permission for this operation</span>
+      </div>
+    );
+  }
 
 
 
