@@ -65,57 +65,47 @@ const WebsiteSetup = () => {
 
   const handleCreateAdmin = async () => {
     Show.showLoading("Processing Data");
-
-    // Get the user's current location
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        setLatitude(latitude);
-        setLongitude(longitude);
-
-        try {
-          const formData = new FormData();
-          formData.append("CompanyLogo", CompanyLogo);
-          formData.append("CompanyName", CompanyName);
-          formData.append("ShopURL", ShopURL);
-          formData.append("Location", Location);
-          formData.append("PhoneNumber", PhoneNumber);
-          formData.append("Email", Email);
-          formData.append("LinkedIn", LinkedIn);
-          formData.append("Whatsapp", Whatsapp);
-          formData.append("Instagram", Instagram);
-          formData.append("Facebook", Facebook);
-          formData.append("AdminId", userInfo.UserId);
-          formData.append("Latitude", latitude);
-          formData.append("Longitude", longitude);
-
-          const response = await fetch(apiServer + "WebsiteSetup", {
-            method: "POST",
-            headers: {
-              'UserId': userInfo.UserId,
-              'SessionId': userInfo.SessionId
-            },
-            body: formData
-          });
-
-          const data = await response.json();
-
-          if (response.ok) {
-            Show.hideLoading();
-            Show.Success(data.message);
-          } else {
-            Show.Attention(data.message);
-          }
-        } catch (error) {
-          Show.Attention("An error has occurred");
-        }
-      },
-      (error) => {
-        Show.Attention("Could not retrieve location");
-        console.error(error);
+  
+    try {
+      const formData = new FormData();
+      formData.append("CompanyLogo", CompanyLogo);
+      formData.append("CompanyName", CompanyName);
+      formData.append("ShopURL", ShopURL);
+      formData.append("Location", Location);
+      formData.append("PhoneNumber", PhoneNumber);
+      formData.append("Email", Email);
+      formData.append("LinkedIn", LinkedIn);
+      formData.append("Whatsapp", Whatsapp);
+      formData.append("Instagram", Instagram);
+      formData.append("Facebook", Facebook);
+      formData.append("AdminId", userInfo.UserId);
+  
+      // Send the request without latitude and longitude
+      const response = await fetch(apiServer + "WebsiteSetup", {
+        method: "POST",
+        headers: {
+          'UserId': userInfo.UserId,
+          'SessionId': userInfo.SessionId
+        },
+        body: formData
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        Show.hideLoading();
+        Show.Success(data.message);
+      } else {
+        Show.Attention(data.message);
       }
-    );
+    } catch (error) {
+      Show.Attention("An error has occurred");
+      console.error(error);
+    }
   };
+
+  
+  
   const handleFileChange = (setter, previewSetter) => (e) => {
     const file = e.target.files[0];
   
