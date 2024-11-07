@@ -1476,15 +1476,7 @@ export const links = [
       name: 'websiteSetup',
       icon: <FcGlobe/>,
       roles:[
-        {role:"Can_Create_Admin"}, 
-        {role: "Can_Update_Admin"}, 
-        {role:"Can_View_Single_Admin"},
-        {role:"Can_Block_Admin"}, 
-        {role: "Can_UnBlock_Admin"}, 
-        {role:"Can_Suspend_Admin"},
-        {role:"Can_UnSuspend_Admin"}, 
-        {role: "Can_View_All_Admin"}, 
-        {role:"Can_Delete_Admin"},
+        {role: "Can_Configure_WebsiteSetup",}, 
         {role: "SuperAdmin"}, 
       
       ]
@@ -1496,12 +1488,9 @@ export const links = [
       name: 'sliders',
       icon: <TfiLayoutSlider />,
       roles:[
-        {role:"Can_Block_Customer"}, 
-        {role: "Can_UnBlock_Customer"}, 
-        {role:"Can_Suspend_Customer"},
-        {role:"Can_UnSuspend_Customer"}, 
-        {role: "Can_View_All_Customer"}, 
-        {role:"Can_Delete_Customer"},
+        {role:"Can_Create_SlideSection"}, 
+        {role: "Can_Update_SliderSection"}, 
+        {role:"Can_Delete_SliderSection"},
         {role: "SuperAdmin"}, 
       
       ]
@@ -1513,15 +1502,13 @@ export const links = [
       name: 'explore',
       icon: <IoCarSportOutline />,
       roles:[
-        {role:"Can_Create_Admin"}, 
-        {role: "Can_Update_Admin"}, 
-        {role:"Can_View_Single_Admin"},
-        {role:"Can_Block_Admin"}, 
-        {role: "Can_UnBlock_Admin"}, 
-        {role:"Can_Suspend_Admin"},
-        {role:"Can_UnSuspend_Admin"}, 
-        {role: "Can_View_All_Admin"}, 
-        {role:"Can_Delete_Admin"},
+        {role:"Can_Create_ExploreSection"}, 
+        {role: "Can_Update_ExploreSection"}, 
+        {role:"Can_Delete_ExploreSection"},
+        {role:"Can_Create_ExploreSRC"}, 
+        {role: "Can_Delete_ExploreSRC"}, 
+        {role:"Can_Create_ExploreSpecs"},
+        {role:"Can_Delete_ExploreSpecs"}, 
         {role: "SuperAdmin"}, 
       
       ]
@@ -1531,8 +1518,11 @@ export const links = [
       name: 'services',
       icon: <GiSpanner />,
       roles:[
-        {role:"Can_Create_Role"}, 
-        {role: "Can_View_Role"}, 
+        {role:"Can_Create_ServicesSection"}, 
+        {role: "Can_Update_ServiceSection"}, 
+        {role: "Can_Delete_ServiceSection"},
+        {role:"Can_Create_ServicesDetails"}, 
+        {role: "Can_Delete_ServicesDetails"}, 
         {role: "SuperAdmin"}, 
       
       ]
@@ -1542,8 +1532,13 @@ export const links = [
       name: 'rentACar',
       icon: <LiaCarSideSolid />,
       roles:[
-        {role: "Can_View_Role"}, 
-        {role:"Can_Delete_Role"},
+        {role:"Can_Create_RentACar"}, 
+        {role: "Can_Update_RentACar"}, 
+        {role:"Can_Delete_RentACar"},
+        {role:"Can_Create_RentACarSRC"}, 
+        {role: "Can_Delete_RentACarSRC"}, 
+        {role:"Can_Create_RentACarSpecs"},
+        {role:"Can_Delete_RentACarSpecs"}, 
         {role: "SuperAdmin"}, 
       
       ]
@@ -1553,7 +1548,11 @@ export const links = [
       name: 'blogs',
       icon: <SiBloglovin />,
       roles:[
-        {role: "Can_View_Role"}, 
+        {role: "Can_Create_Blog"}, 
+        {role: "Can_Update_Blog"}, 
+        {role: "Can_Delete_Blog"},
+        {role: "Can_Create_BlogDetails"}, 
+        {role: "Can_Delete_BlogDetails"}, 
         {role: "SuperAdmin"}, 
       
       ]
@@ -1563,7 +1562,7 @@ export const links = [
       name: 'mainChat',
       icon: <IoChatbubbleEllipsesOutline />,
       roles:[
-        {role: "Can_View_Role"}, 
+        {role: "Can_Access_Chat"}, 
         {role: "SuperAdmin"}, 
       
       ]
@@ -1586,38 +1585,40 @@ export const links = [
 
   permissions:[
     {role: "SuperAdmin"},
-    {role:"Can_Block_Customer"}, 
-    {role: "Can_UnBlock_Customer"}, 
-    {role:"Can_Suspend_Customer"},
-    {role:"Can_UnSuspend_Customer"}, 
-    {role: "Can_View_All_Customer"}, 
-    {role:"Can_Delete_Customer"},
-    {role:"Can_Create_Admin"}, 
-    {role: "Can_Update_Admin"}, 
-    {role:"Can_View_Single_Admin"},
-    {role:"Can_Block_Admin"}, 
-    {role: "Can_UnBlock_Admin"}, 
-    {role:"Can_Suspend_Admin"},
-    {role:"Can_UnSuspend_Admin"}, 
-    {role: "Can_View_All_Admin"}, 
-    {role:"Can_Delete_Admin"},
-    {role:"Can_Create_Role"}, 
-    {role: "Can_View_Role"}, 
-    {role:"Can_Delete_Role"}, 
+    {role: "Can_Configure_WebsiteSetup",}, 
+    {role:"Can_Create_SlideSection"}, 
+    {role: "Can_Update_SliderSection"}, 
+    {role:"Can_Delete_SliderSection"},
+    {role:"Can_Create_ExploreSection"}, 
+    {role: "Can_Update_ExploreSection"}, 
+    {role:"Can_Delete_ExploreSection"},
+    {role:"Can_Create_ExploreSRC"}, 
+    {role: "Can_Delete_ExploreSRC"}, 
+    {role:"Can_Create_ExploreSpecs"},
+    {role:"Can_Delete_ExploreSpecs"}, 
+    {role:"Can_Create_ServicesSection"}, 
+    {role: "Can_Update_ServiceSection"}, 
+    {role: "Can_Delete_ServiceSection"},
+    {role:"Can_Create_ServicesDetails"}, 
+    {role: "Can_Delete_ServicesDetails"}, 
+    {role:"Can_Create_RentACar"}, 
+    {role: "Can_Update_RentACar"}, 
+    {role:"Can_Delete_RentACar"},
+    {role:"Can_Create_RentACarSRC"}, 
+    {role: "Can_Delete_RentACarSRC"}, 
+    {role:"Can_Create_RentACarSpecs"},
+    {role:"Can_Delete_RentACarSpecs"}, 
+    {role: "Can_Create_Blog"}, 
+    {role: "Can_Update_Blog"}, 
+    {role: "Can_Delete_Blog"},
+    {role: "Can_Create_BlogDetails"}, 
+    {role: "Can_Delete_BlogDetails"}, 
+    {role: "Can_Access_Chat"}, 
     {role: "Can_Configure_Website"}, 
-    {role:"Can_Create_Admin"}, 
-    {role: "Can_Update_Admin"}, 
-    {role:"Can_View_Single_Admin"},
-    {role:"Can_Block_Admin"}, 
-    {role: "Can_UnBlock_Admin"}, 
-    {role:"Can_Suspend_Admin"},
-    {role:"Can_UnSuspend_Admin"}, 
-    {role: "Can_View_All_Admin"}, 
-    {role:"Can_Delete_Admin"},
-    {role: "Can_View_Audit_Trail"},  
-    {role:"Can_View_Customer_Trail"}, 
-    {role:"Can_View_Product_Assessment"}, 
-    {role:"Can_View_Rate_Limit_Catcher"}, 
+
+
+
+
 
    ],
 
@@ -1625,205 +1626,6 @@ export const links = [
 
 
 },
-
-
-
-  //Vehicle
-  {
-    title: 'Vehicle Mgmt',
-    links: [
-     
-      {
-        name: 'menu',
-        icon: <MdMenuOpen />,
-        roles:[
-          {role:"Can_Create_Menu"}, 
-          {role:  "Can_Delete_Menu"}, 
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-
-      {
-        name: 'category',
-        icon: <TbCategory2 />,
-        roles:[
-          {role:"Can_Create_Category"}, 
-          {role: "Can_Update_Category"}, 
-          {role:"Can_View_A_Single_Category"},
-          {role:"Can_Delete_Category"}, 
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-
-      {
-        name: 'product',
-        icon: <GiConverseShoe />,
-        roles:[
-          {role:"Can_Create_Product"}, 
-          {role:  "Can_Update_Product"}, 
-          {role:   "Can_Delete_Product"}, 
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-
-      {
-        name: 'inventory',
-        icon: <MdOutlineInventory />,
-        roles:[
-          {role:"Can_Update_Product"}, 
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-
-      {
-        name: 'discount',
-        icon: <MdOutlineDiscount />,
-        roles:[
-          {role:"Can_Run_Promotion"}, 
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-
-      {
-        name: 'payments',
-        icon: <GiMoneyStack />,
-        roles:[
-          {role:"Can_View_Payment"},  
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-      {
-        name: 'creditSales',
-        icon: <GiReceiveMoney />,
-        roles:[
-          {role: "Can_Handle_Credit_Sales"},  
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-      {
-        name: 'collectionAccount',
-        icon: <MdOutlineAccountBalance />,
-        roles:[
-          {role: "Can_Handle_Credit_Sales"},  
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-      {
-        name: 'paymentOnDelivery',
-        icon: <GiTakeMyMoney />,
-        roles:[
-          {role: "Can_Handle_PaymentOnDelivery"},  
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-  
-      {
-        name: 'bagging',
-        icon: <FaBasketShopping />,
-        roles:[
-          {role:"Can_Access_Bagging"}, 
-          {role:"Can_View_Bagging"}, 
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-  
-      {
-        name: 'checking',
-        icon: <FaClipboardCheck />,
-        roles:[
-          {role:"Can_Check_Checking"}, 
-          {role:"Can_View_Checking"}, 
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-
-      {
-        name: 'assignDelivery',
-        icon: <GrDeliver />,
-        roles:[
-          {role:"Can_Assign_Delivery"},  
-          {role:"Can_Do_Delivery"}, 
-          {role:"Can_Track_Delivery"}, 
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-  
-      {
-        name: 'customerDelivery',
-        icon: <TbTruckDelivery />,
-        roles:[
-  
-          {role:"Can_Do_Delivery_To_Customers"}, 
-          {role:"Can_Do_Delivery"}, 
-          {role:"Can_Track_Delivery"}, 
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-  
-      {
-        name: 'deliveryList',
-        icon: <MdElectricBike />,
-        roles:[
-          {role:"Can_Track_Delivery"}, 
-          {role: "SuperAdmin"}, 
-        
-        ]
-      },
-     
-
-
-
-
-
-
-
-    ],
-
-    permissions:[
-      {role: "SuperAdmin"},
-      {role:"Can_Create_Menu"}, 
-      {role:  "Can_Delete_Menu"},
-      {role:"Can_Create_Category"}, 
-      {role: "Can_Update_Category"}, 
-      {role:"Can_View_A_Single_Category"},
-      {role:"Can_Delete_Category"}, 
-      {role:"Can_Create_Product"}, 
-      {role:  "Can_Update_Product"}, 
-      {role:   "Can_Delete_Product"}, 
-      {role:"Can_Run_Promotion"}, 
-      {role:"Can_View_Payment"},  
-    {role:"Can_Access_Bagging"}, 
-    {role:"Can_View_Bagging"}, 
-    {role:"Can_Check_Checking"}, 
-    {role:"Can_View_Checking"}, 
-    {role: "Can_Handle_Credit_Sales"},  
-    {role:"Can_Assign_Delivery"},  
-    {role:"Can_Do_Delivery"}, 
-    {role:"Can_Track_Delivery"}, 
-    {role:"Can_Do_Delivery_To_Customers"}, 
-
-
- 
-     ],
-
-
-
-
-  },
-
 
 
 

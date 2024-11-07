@@ -76,6 +76,11 @@ useEffect(() => {
   const [Audit, setAudit] = useState([]);
 
   useEffect(() => {
+
+    const formData = new FormData()
+
+    formData.append("AdminId",userInfo.UserId)
+
     if (userInfo.UserId && userInfo.SessionId) {
       fetch(apiServer + "GetChat", {
         method: "POST",
@@ -83,6 +88,7 @@ useEffect(() => {
           'UserId': userInfo.UserId,
           'SessionId': userInfo.SessionId
         },
+        body:formData
       })
         .then(res => res.json())
         .then(data => {
