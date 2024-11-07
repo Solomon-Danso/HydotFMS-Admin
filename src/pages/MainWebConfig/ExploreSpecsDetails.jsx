@@ -91,8 +91,9 @@ useEffect(()=>{
 
     const formData = new FormData();
     formData.append("AdminId",userInfo.UserId)
+    formData.append('ExploreID', exploreId);
   
-  fetch(apiServer+"ViewAllExploreSlide",{
+  fetch(apiServer+"ViewSpecificExploreSlide",{
     method: "POST",
         headers: {
           'UserId': userInfo.UserId,         

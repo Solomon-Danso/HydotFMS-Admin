@@ -91,8 +91,9 @@ useEffect(()=>{
 
     const formData = new FormData();
     formData.append("AdminId",userInfo.UserId)
+    formData.append('RentACarID', rentACarId);
   
-  fetch(apiServer+"ViewAllRentACarSpec",{
+  fetch(apiServer+"ViewSpecificRentACarSpec",{
     method: "POST",
         headers: {
           'UserId': userInfo.UserId,         

@@ -88,16 +88,9 @@ useEffect(() => {
 
 useEffect(()=>{
 
-    const formData = new FormData();
-    formData.append("AdminId",userInfo.UserId)
   
   fetch(apiServer+"ViewAllSlider",{
-    method: "POST",
-        headers: {
-          'UserId': userInfo.UserId,         
-          'SessionId': userInfo.SessionId    
-        },
-        body:formData
+    method: "POST"
   })
   .then(res=>res.json())
   .then(data=>{
@@ -106,7 +99,7 @@ useEffect(()=>{
   .catch(err=>console.error(err))
   
   
-  },[userInfo])
+  },[])
 
 
 

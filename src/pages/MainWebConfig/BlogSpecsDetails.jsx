@@ -83,8 +83,9 @@ useEffect(()=>{
 
     const formData = new FormData();
     formData.append("AdminId",userInfo.UserId)
-  
-  fetch(apiServer+"ViewAllBlogDetails",{
+    formData.append('BlogID', blogID);
+
+  fetch(apiServer+"ViewSpecificBlogDetails",{
     method: "POST",
         headers: {
           'UserId': userInfo.UserId,         
