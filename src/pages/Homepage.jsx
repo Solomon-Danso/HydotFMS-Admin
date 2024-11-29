@@ -37,7 +37,7 @@ const Login = () => {
       }
       setDeferredPrompt(null); // Clear the saved event
     } else {
-      Show.Attention("Install prompt not available.");
+      Show.Attention("App already installed");
     }
   };
 
