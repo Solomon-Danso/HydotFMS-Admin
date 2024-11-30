@@ -127,20 +127,25 @@ const Login = () => {
             >
               Sign in
             </Button>
-          </HDSS_Form>
-
-          {/* Install App Button */}
-          <div style={{ textAlign: "center", marginTop: "2rem" }}>
-            <AiOutlineDownload 
+            <br/>Do you want to Quick Install Our App?
+            <Button
+              color="white"
+              style={{ marginTop: 25, width: "100%" }}
+              onClick={handleInstallClick} 
+            >
+              <AiOutlineDownload 
               onClick={handleInstallClick} 
               size={30} 
-              style={{ cursor: 'pointer', color: colors.primary }} 
+              style={{ cursor: 'pointer', color: "#ffffff" }} 
               title="Install App"
-            />
-            <p style={{ fontSize: 12, color: "gray", marginTop: 10 }}>
-              Install App
-            </p>
-          </div>
+            />  Install App
+            </Button>
+
+          </HDSS_Form>
+
+         
+
+          
 
           <p style={{ textAlign: "center", fontSize: 10, color: "gray", marginTop: "10vh" }}>
             Hydot Tech Admin Portal © {new Date().getFullYear()} All rights reserved.

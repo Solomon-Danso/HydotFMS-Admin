@@ -293,12 +293,14 @@ export const LoginDiv = styled.div`
   flex-direction: column;
   align-items: center;
   transition: all 0.5s ease-in-out;
-  overflow: hidden;
-    height:80vh;
+  overflow: auto;
+  height:80vh;
+
 
   @media (max-width: 768px) {
     flex: 1;
     display: ${(props) => (props.hide ? "none" : "flex")};
+    padding-top:30%;
   }
 `;
 
@@ -390,10 +392,12 @@ color:${colors.htext}
 export const SchoolLogo = styled.img`
   width: 110px;
   height: 110px;
+ 
 
   @media (max-width: 768px) {
-    width: 60px;
-    height: 60px;
+    width: 100px;
+    height: 100px;
+
   }
 `;
 
