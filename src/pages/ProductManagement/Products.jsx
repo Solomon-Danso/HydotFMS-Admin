@@ -326,7 +326,7 @@ useEffect(()=>{
 const menuItems = [
   {
     icon: <TfiLayoutSlider />,
-    text: "Add Sub Images",
+    text: "Add Product Images",
     type: "navigate",
     path: `/main/product/:ProductId`, // Placeholder for the dynamic segment
   },
@@ -372,8 +372,7 @@ const handleConfirmation = (ProductId) =>{
 ];
 
  const exploreMediaGrid = [
-  { accessorKey: "Picture", header: "Picture" },
-  { accessorKey: "DetailedPicture", header: "Detailed Picture" },
+  { accessorKey: "Picture", header: "Picture" }
 ];
 
 

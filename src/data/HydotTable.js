@@ -85,7 +85,7 @@ const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [
         {media?.map(({ accessorKey, header }) => {
           const mediaSrc = row.original[accessorKey];
           if (!mediaSrc) return null;
-          const isImage = /\.(jpg|jpeg|png|gif)$/i.test(mediaSrc);
+          const isImage = /\.(jpg|jpeg|webp|png|gif)$/i.test(mediaSrc);
           const isVideo = /\.(mp4|webm|ogg)$/i.test(mediaSrc);
           return (
             <Box key={accessorKey} sx={{ width: '100%', textAlign: 'center' }}>
