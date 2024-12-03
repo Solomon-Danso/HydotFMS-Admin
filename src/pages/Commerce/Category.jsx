@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import "../Website/Website.css";
-import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable } from '../../data/Profile';
-import { colors } from '../../data/Colors';
-import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, products } from '../../data/champion';
-import { GridComponent, ContextMenu, Edit, ExcelExport, Filter, Page, PdfExport, Resize, Sort, ColumnDirective, ColumnsDirective, Inject } from '@syncfusion/ej2-react-grids';
+import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable, FormTextAreaStudent } from '../../data/Profile';
 import { Header } from '../../components';
 import Selector from '../../data/Selector';
 import { Show } from '../../data/Alerts';
 import { apiServer } from '../../data/Endpoint';
 import { AES, enc } from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
-import { Search, Toolbar } from '@syncfusion/ej2-react-grids';
+import { TfiLayoutSlider } from 'react-icons/tfi';
+import { FaCar, FaEdit } from 'react-icons/fa';
+import { MdAddTask, MdAssignmentAdd, MdDelete } from 'react-icons/md';
+import HydotTable from '../../data/HydotTable';
+import {
+  Stepper, Step, StepLabel, Button, Typography, Box
+} from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import VideoLabelIcon from '@mui/icons-material/VideoLabel';
+import { GiBookCover } from "react-icons/gi";
 
 
 
 
-const Category = () => {
+const Explore = () => {
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       try {
@@ -36,14 +43,21 @@ const Category = () => {
 
 
 
+const [previewImage, setPreviewImage] = useState(null); // For image preview
 
-  const [picture, setPicture] = useState("")
-  const [name, setName] = useState("")
-  const [section, setSection] = useState("")
-  const [AdminUserId,setAdminUserId] = useState("")
-  const [previewImage, setPreviewImage] = useState(null); // For image preview
- 
-  const [AdminList, setAdminList] = useState([])
+const [Src, setSrc] = useState("")
+const [Title, setTitle] = useState("")
+const [Price, setPrice] = useState(0.0)
+const [Explore, setExplore] = useState([])
+const [MenuId, setMenuId] = useState("")
+const [CategoryId, setCategoryId] = useState("")
+const [ProductId, setProductId] = useState("")
+const [Quantity, setQuantity] = useState("")
+const [Size, setSize] = useState("")
+const [Description, setDescription] = useState("")
+
+
+
 
 
 
@@ -70,186 +84,36 @@ useEffect(() => {
 }, []);
 
 
+
+
+
+
 useEffect(()=>{
 
-  const formData = new FormData();
-  formData.append("AdminId",userInfo.UserId)
-
-fetch(apiServer+"ViewCategory",{
-  method: "POST",
-      headers: {
-        'UserId': userInfo.UserId,         
-        'SessionId': userInfo.SessionId    
-      },
-      body:formData
-})
-.then(res=>res.json())
-.then(data=>setAdminList(data))
-.catch(err=>console.error(err))
-
-
-},[userInfo])
-
-
-
-const handleCreateAdmin = async () => {
-
- 
-
-Show.showLoading("Processing Data");
-  try {
-
-const formData = new FormData()
-formData.append("CategoryName", name)
-formData.append("CategoryPicture", picture)
-formData.append("Section", section)
-formData.append("AdminId",userInfo.UserId)
-
-
-    const response = await fetch(apiServer+"CreateCategory", {
-      method: "POST",
-      headers: {
-        'UserId': userInfo.UserId,         
-        'SessionId': userInfo.SessionId    
-      },
-      body:formData
-    });
-
-    const data = await response.json();
- 
-
-    if (response.ok) {
-      
-      Show.hideLoading();
-
-      Show.Success(data.message);
-       window.location.reload()
-      
-    } else {
-      Show.Attention(data.message);
-    }
-  } catch (error) {
-
-    Show.Attention("An error has occured");
-   
-  }
-
-}
-
-
-const handleEditAdmin = async () => {
-
- 
-
-Show.showLoading("Processing Data");
-  try {
-
-const formData = new FormData()
-formData.append("CategoryName", name)
-formData.append("CategoryPicture", picture)
-formData.append("Section", section)
-formData.append("AdminId",userInfo.UserId)
-formData.append("CategoryId", AdminUserId) 
-
-
-    const response = await fetch(apiServer+"UpdateCategory", {
-      method: "POST",
-      headers: {
-        'UserId': userInfo.UserId,         
-        'SessionId': userInfo.SessionId    
-      },
-      body:formData
-    });
-
-    const data = await response.json();
- 
-
-    if (response.ok) {
-      
-      Show.hideLoading();
-
-      Show.Success(data.message);
-       
-      window.location.reload()
-      
-    } else {
-      Show.Attention(data.message);
-    }
-  } catch (error) {
-
-    Show.Attention("An error has occured");
-   
-  }
-
-}
-
-const handleDeleteAdmin = async (id) => {
-
- 
-
-  Show.showLoading("Processing Data");
-    try {
+    const formData = new FormData();
+    formData.append("AdminId",userInfo.UserId)
   
-  const formData = new FormData()
-  formData.append("UserId", id) 
-  formData.append("AdminId",userInfo.UserId)
-
-  
-      const response = await fetch(apiServer+"DeleteAdmin", {
-        method: "POST",
+  fetch(apiServer+"ViewCategory",{
+    method: "POST",
         headers: {
           'UserId': userInfo.UserId,         
           'SessionId': userInfo.SessionId    
         },
         body:formData
-      });
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    setExplore(data)
+    console.log(data)
+  })
+  .catch(err=>console.error(err))
   
-      const data = await response.json();
-   
   
-      if (response.ok) {
-        
-        Show.hideLoading();
-  
-        Show.Success(data.message);
-         window.location.reload()
-        
-      } else {
-        Show.Attention(data.message);
-      }
-    } catch (error) {
-  
-      Show.Attention("An error has occured");
-     
-    }
-  
-  }
+  },[userInfo])
 
 
 
-
-
-
-
-  const handleEdit = (id) => {
-    console.log('Edit entry ID:', id);
-  };
-
-
-
-  const handleActionBegin = (args) => {
-    if (args.requestType === 'save') {
-      const updatedData = args.data;
-      handleEdit(updatedData);
-    }
-
-    if (args.requestType === 'delete') {
-      const deletedData = args.data[0]; 
-      handleDeleteAdmin(deletedData.UserId);
-    }
-  };
-
-const Section = [
+  const Section = [
     {
         name:"Section1"
     },
@@ -270,105 +134,345 @@ const Section = [
 ]
 
 
-const handleImageChange = (e) => {
-  const file = e.target.files[0];
-  setPicture(file);
 
-  // Preview the selected image
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    setPreviewImage(reader.result);
+
+
+
+
+  const handleCreate = async () => {
+
+ 
+
+    Show.showLoading("Processing Data");
+      try {
+    
+    const formData = new FormData()
+    
+    formData.append("CategoryName", Title)
+    formData.append("CategoryPicture", Src)
+    formData.append("Section", CategoryId)
+    formData.append("AdminId",userInfo.UserId)
+    
+    
+    
+        const response = await fetch(apiServer+"CreateCategory", {
+          method: "POST",
+          headers: {
+            'UserId': userInfo.UserId,         
+            'SessionId': userInfo.SessionId    
+          },
+          body:formData
+        });
+    
+        const data = await response.json();
+     
+    
+        if (response.ok) {
+          
+          Show.hideLoading();
+    
+          Show.Success(data.message);
+           window.location.reload()
+          
+        } else {
+          Show.Attention(data.message);
+        }
+      } catch (error) {
+    
+        Show.Attention("An error has occured");
+       
+      }
+    
+    }
+    
+    
+    const handleEdit = async (Id) => {
+    
+     
+    
+    Show.showLoading("Processing Data");
+      try {
+    
+    const formData = new FormData()
+    formData.append("CategoryName", Title)
+    formData.append("CategoryPicture", Src)
+    formData.append("Section", CategoryId)
+    formData.append("AdminId",userInfo.UserId)
+    formData.append("CategoryId", Id) 
+    
+    
+        const response = await fetch(apiServer+"UpdateCategory", {
+          method: "POST",
+          headers: {
+            'UserId': userInfo.UserId,         
+            'SessionId': userInfo.SessionId    
+          },
+          body:formData
+        });
+    
+        const data = await response.json();
+     
+    
+        if (response.ok) {
+          
+          Show.hideLoading();
+    
+          Show.Success(data.message);
+           
+          window.location.reload()
+          
+        } else {
+          Show.Attention(data.message);
+        }
+      } catch (error) {
+    
+        Show.Attention("An error has occured");
+       
+      }
+    
+    }
+    
+    const handleDelete = async (id) => {
+    
+     
+    
+      Show.showLoading("Processing Data");
+        try {
+      
+      const formData = new FormData()
+      formData.append("CategoryId", id)
+      formData.append("AdminId",userInfo.UserId)
+    
+      
+          const response = await fetch(apiServer+"DeleteCategory", {
+            method: "POST",
+            headers: {
+              'UserId': userInfo.UserId,         
+              'SessionId': userInfo.SessionId    
+            },
+            body:formData
+          });
+      
+          const data = await response.json();
+       
+      
+          if (response.ok) {
+            
+            Show.hideLoading();
+      
+            Show.Success(data.message);
+             window.location.reload()
+            
+          } else {
+            Show.Attention(data.message);
+          }
+        } catch (error) {
+      
+          Show.Attention("An error has occured");
+         
+        }
+      
+      }
+    
+    
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setSrc(file);
+  
+    // Preview the selected image
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewImage(reader.result);
+    };
+    reader.readAsDataURL(file);
   };
-  reader.readAsDataURL(file);
+
+
+
+
+// Define the menu items array
+const menuItems = [
+
+
+  {
+    icon: <FaEdit />,
+    text: "Edit Category",
+    type: "function",
+    onClick: (CategoryId) => {
+      handleEdit(CategoryId); // Assuming this function is defined in your component
+    },
+    columnNames: ['CategoryId'] // Specify the column name for the ID here
+  },
+
+
+  {
+    icon: <MdDelete color='#f06040'/>,
+    text: "Delete Category",
+    type: "function",
+    onClick: (CategoryId) => {
+      handleConfirmation(CategoryId); // Assuming this function is defined in your component
+    },
+    columnNames: ['CategoryId'] // Specify the column name for the ID here
+  },
+
+
+];
+
+const handleConfirmation = (ProductId) =>{
+
+  Show.Confirm("Do you want to Delete, Action cannot be reversed ", () => handleDelete(ProductId)  );
+}
+
+
+ const exploreGrid = [
+  { accessorKey: "id", header: "ID" },
+  { accessorKey: "CategoryId", header: "Category ID" },
+  { accessorKey: "CategoryPicture", header: "Picture" },
+  { accessorKey: "CategoryName", header: "Title" },
+];
+
+ const exploreMediaGrid = [
+  { accessorKey: "CategoryPicture", header: "Picture" }
+];
+
+
+
+
+
+
+
+const [activeStep, setActiveStep] = useState(0);
+const steps = ['Upload Media', 'Enter Details',  'Complete'];
+
+const getStepIcon = (step) => {
+  switch (step) {
+    case 0:
+      return <VideoLabelIcon />;
+    case 1:
+      return  <MdAssignmentAdd size={"2rem"}/>;
+    case 2:
+      return <MdAddTask size={"2rem"} />;
+    default:
+      return <CheckIcon size={"2rem"} />;
+  }
 };
 
 
 
+const handleNext = () => {
+  setActiveStep((prevActiveStep) => prevActiveStep + 1);
+};
+
+const handleBack = () => {
+  setActiveStep((prevActiveStep) => prevActiveStep - 1);
+};
+
+const handleReset = () => {
+  setActiveStep(0);
+};
+
+
   return (
     <div>
-      <Header category="Commerce" title="Category" />
+      <Header category="E-commerce Mgmt" title="Products" />
 
-      <div className="wwd-row">
 
-        <div className="card" style={{ backgroundColor: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>
-          <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add  Category </div>
 
-          <AdmitStudentRole>
 
-          <Selector placeholder="Select Section" dataList={Section} dataKey="name" dataValue="name" setMethod={(method) => setSection(method)} />
- 
-      
-          {previewImage && (
-              <div style={{ marginTop: "1rem" }}>
-                <img src={previewImage} alt="Preview" style={{ maxWidth: "200px", maxHeight: "200px" }} />
-              </div>
-            )}
+<div className="wwd-row">
+      <div className="card" style={{ backgroundColor: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white", padding: "2rem" }}>
+        
+       <Stepper activeStep={activeStep} alternativeLabel sx={{ padding: '2rem 0' }}>
+          {steps.map((label, index) => (
+            <Step key={label}>
+              <StepLabel sx={{ color: localStorage.getItem("themeMode") === "Light" ? "orange" : "blue" }} StepIconComponent={() => getStepIcon(index)} >
+               <span style={{ color: localStorage.getItem("themeMode") === "Light" ? "orange" : "blue" }}>{label}</span> 
+                
+                </StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        
+        <Box sx={{ padding: 3 }}>
+          
+
+          {activeStep === 0 && (
             <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Picture</FormLable>
-              <FormInputStudent
-               type="file"
-               required
-               placeholder=""
-               accept=".jpg, .png, .jpeg, .ico, .webp"
-               onChange={handleImageChange}
-               
-              />
+
+
+          <Selector placeholder="Select Page Section" dataList={Section} dataKey="name" dataValue="name" setMethod={(method) => setCategoryId(method)} />
+        
+
+              {previewImage && (
+                    <div style={{ marginTop: "1rem" }}>
+                      <img src={previewImage} alt="Preview" style={{ width: "auto", height: "40vh" }} />
+                    </div>
+                  )}
+                  <FormLable style={{ color: localStorage.getItem("colorMode") }}> Picture</FormLable>
+                  <FormInputStudent
+                    type="file"
+                    required
+                    placeholder=""
+                    accept=".jpg, .png, .jpeg, .ico, .webp"
+                    onChange={handleImageChange}
+                  />
             </div>
+          )}
 
+          {activeStep === 1 && (
             <div>
+             
+             <div>
               <FormLable style={{ color: localStorage.getItem("colorMode") }}> Name</FormLable>
               <FormInputStudent
                type="text"
 
                placeholder=""
-               onChange={(e) => setName(e.target.value)}
+               onChange={(e) => setTitle(e.target.value)}
                
               />
             </div>
 
-
-
-
-           
-         
-          </AdmitStudentRole>
-
-          <AdmitButton3
-            background={localStorage.getItem("colorMode")}
-            color="white"
-            border={localStorage.getItem("colorMode")}
-            style={{ marginBottom: "1rem" }}
-            onClick={()=>{ handleCreateAdmin()}}       
-            >Add
-          </AdmitButton3>
-
-          <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Enter Category Id</FormLable>
-              <FormInputStudent
-                type="text"
-                required
-                placeholder=""
-                onChange={(e) => setAdminUserId(e.target.value)}
-              />
+             
             </div>
+          )}
 
-            <AdmitButton3
-            background={localStorage.getItem("colorMode")}
-            color="white"
-            border={localStorage.getItem("colorMode")}
-            style={{ marginBottom: "1rem" }}
-            onClick={()=>{ handleEditAdmin()}}
-            
-            >Edit
-          </AdmitButton3>
+          {activeStep === 2 && (
+            <div>
+              <Typography>
+              <span style={{ color: localStorage.getItem("themeMode") === "Light" ? "orange" : "blue" }}> All steps completed. Ready to submit.</span> 
+               </Typography>
+              <AdmitButton3
+                background={localStorage.getItem("colorMode")}
+                color="white"
+                border={localStorage.getItem("colorMode")}
+                onClick={handleCreate}
+              >
+                Submit
+              </AdmitButton3>
+            </div>
+          )}
 
-
-
-        </div>
-
-     
-
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
+            <Button
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              sx={{ mt: 2, mr: 1 }}
+            >
+              Back
+            </Button>
+            <Button
+              variant="contained"
+              onClick={activeStep === steps.length - 1 ? handleReset : handleNext}
+              sx={{ mt: 2 }}
+            >
+              {activeStep === steps.length - 1 ? 'Reset' : 'Next'}
+            </Button>
+          </div>
+        </Box>
       </div>
+    </div>
+
 
       <div style={{ marginTop: "2rem", padding: "1rem" }}>
         <span>
@@ -379,35 +483,24 @@ const handleImageChange = (e) => {
               fontSize: "1.5rem",
             }}
           >
-          Category List
+          Product List
           </u>
         </span>
 
-        <GridComponent
-           id="gridcomp"
-      toolbar={['Search']}  // Add the search bar
- 
-          dataSource={AdminList}
-          enableHover={true}
-          allowPaging
-          allowSorting
-          allowExcelExport
-          allowPdfExport
-          contextMenuItems={contextMenuItems}
-          actionBegin={handleActionBegin}
-          style={{ backgroundColor: localStorage.getItem("colorMode") }}
-        >
-          <ColumnsDirective>
-            {categoryGrid.map((item, index) => (
-              <ColumnDirective key={index} {...item} />
-            ))}
-          </ColumnsDirective>
-          <Inject services={[Resize, Sort, ContextMenu, Filter, Page, ExcelExport, Edit, PdfExport, Search, Toolbar]} />
+        <HydotTable 
+  columns={exploreGrid} 
+  data={Explore} 
+  media={exploreMediaGrid} 
+  colorMode={localStorage.getItem("colorMode")}
+  menuItems={menuItems}
 
-        </GridComponent>
+/>;
+
+       
       </div>
     </div>
   );
 }
 
-export default Category;
+export default Explore;
+

@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import "../Website/Website.css";
-import Select from 'react-select';
-import styled from 'styled-components';
-import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable, FormTextAreaStudent } from '../../data/Profile';
+import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable } from '../../data/Profile';
 import { colors } from '../../data/Colors';
-import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, productGrid, products } from '../../data/champion';
+import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, products } from '../../data/champion';
 import { GridComponent, ContextMenu, Edit, ExcelExport, Filter, Page, PdfExport, Resize, Sort, ColumnDirective, ColumnsDirective, Inject } from '@syncfusion/ej2-react-grids';
 import { Header } from '../../components';
 import Selector from '../../data/Selector';
@@ -17,7 +15,7 @@ import { Search, Toolbar } from '@syncfusion/ej2-react-grids';
 
 
 
-const Product = () => {
+const Category = () => {
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       try {
@@ -37,24 +35,14 @@ const Product = () => {
   }, []);
 
 
-const [MenuList, setMenuList] = useState([])
-const [MenuId, setMenuId] = useState("")
-const [CategoryList, setCategoryList] = useState("")
-const [CategoryId, setCategoryId] = useState("")
-const [picture, setPicture] = useState("")
-const [ProductId, setProductId] = useState("")
-const [Title, setTitle] = useState("")
-const [Price, setPrice] = useState("")
-const [Quantity, setQuantity] = useState("")
-const [Size, setSize] = useState("")
-const [Description, setDescription] = useState("")
-const [previewImage, setPreviewImage] = useState(null); // For image preview
+
+
+  const [picture, setPicture] = useState("")
+  const [name, setName] = useState("")
+  const [section, setSection] = useState("")
+  const [AdminUserId,setAdminUserId] = useState("")
+  const [previewImage, setPreviewImage] = useState(null); // For image preview
  
-
-
-
-
-
   const [AdminList, setAdminList] = useState([])
 
 
@@ -87,7 +75,7 @@ useEffect(()=>{
   const formData = new FormData();
   formData.append("AdminId",userInfo.UserId)
 
-fetch(apiServer+"ViewProductAdmin",{
+fetch(apiServer+"ViewCategory",{
   method: "POST",
       headers: {
         'UserId': userInfo.UserId,         
@@ -102,49 +90,6 @@ fetch(apiServer+"ViewProductAdmin",{
 
 },[userInfo])
 
-useEffect(()=>{
-
-    const formData = new FormData();
-    formData.append("AdminId",userInfo.UserId)
-  
-  fetch(apiServer+"ViewMenu",{
-    method: "POST",
-        headers: {
-          'UserId': userInfo.UserId,         
-          'SessionId': userInfo.SessionId    
-        },
-        body:formData
-  })
-  .then(res=>res.json())
-  .then(data=>setMenuList(data))
-  .catch(err=>console.error(err))
-  
-  
-  },[userInfo])
-
-
-
-  useEffect(()=>{
-
-    const formData = new FormData();
-    formData.append("AdminId",userInfo.UserId)
-  
-  fetch(apiServer+"ViewCategory",{
-    method: "POST",
-        headers: {
-          'UserId': userInfo.UserId,         
-          'SessionId': userInfo.SessionId    
-        },
-        body:formData
-  })
-  .then(res=>res.json())
-  .then(data=>setCategoryList(data))
-  .catch(err=>console.error(err))
-  
-  
-  },[userInfo])
-
-
 
 
 const handleCreateAdmin = async () => {
@@ -155,22 +100,13 @@ Show.showLoading("Processing Data");
   try {
 
 const formData = new FormData()
-
+formData.append("CategoryName", name)
+formData.append("CategoryPicture", picture)
+formData.append("Section", section)
 formData.append("AdminId",userInfo.UserId)
-formData.append("MenuId",MenuId);
-formData.append("CategoryId",CategoryId);
-formData.append("Picture",picture);
-formData.append("Title",Title);
-formData.append("Price",Price);
-formData.append("Quantity",Quantity);
-formData.append("Size",Size);
-formData.append("ProductId",ProductId);
-formData.append("Description",Description);
 
 
-
-
-    const response = await fetch(apiServer+"CreateProduct", {
+    const response = await fetch(apiServer+"CreateCategory", {
       method: "POST",
       headers: {
         'UserId': userInfo.UserId,         
@@ -209,19 +145,14 @@ Show.showLoading("Processing Data");
   try {
 
 const formData = new FormData()
+formData.append("CategoryName", name)
+formData.append("CategoryPicture", picture)
+formData.append("Section", section)
 formData.append("AdminId",userInfo.UserId)
-formData.append("MenuId",MenuId);
-formData.append("CategoryId",CategoryId);
-formData.append("Picture",picture);
-formData.append("Title",Title);
-formData.append("Price",Price);
-formData.append("Quantity",Quantity);
-formData.append("Size",Size);
-formData.append("ProductId",ProductId);
-formData.append("Description",Description);
+formData.append("CategoryId", AdminUserId) 
 
 
-    const response = await fetch(apiServer+"UpdateProduct", {
+    const response = await fetch(apiServer+"UpdateCategory", {
       method: "POST",
       headers: {
         'UserId': userInfo.UserId,         
@@ -318,41 +249,60 @@ const handleDeleteAdmin = async (id) => {
     }
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    setPicture(file);
-  
-    // Preview the selected image
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setPreviewImage(reader.result);
-    };
-    reader.readAsDataURL(file);
+const Section = [
+    {
+        name:"Section1"
+    },
+
+    {
+        name:"Section2"
+    },
+
+    {
+        name:"Section3"
+    },
+
+    {
+        name:"Section4"
+    },
+
+
+]
+
+
+const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  setPicture(file);
+
+  // Preview the selected image
+  const reader = new FileReader();
+  reader.onloadend = () => {
+    setPreviewImage(reader.result);
   };
-  
+  reader.readAsDataURL(file);
+};
 
 
 
   return (
     <div>
-      <Header category="Product Management" title="Product" />
+      <Header category="Commerce" title="Category" />
 
       <div className="wwd-row">
 
         <div className="card" style={{ backgroundColor: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>
-          <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add  Product </div>
+          <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add  Category </div>
 
           <AdmitStudentRole>
 
-          <Selector placeholder="Select Category" dataList={CategoryList} dataKey="CategoryId" dataValue="CategoryName" setMethod={(method) => setCategoryId(method)} />
-          <Selector placeholder="Select Menu" dataList={MenuList} dataKey="MenuId" dataValue="MenuName" setMethod={(method) => setMenuId(method)} />
+          <Selector placeholder="Select Section" dataList={Section} dataKey="name" dataValue="name" setMethod={(method) => setSection(method)} />
  
+      
           {previewImage && (
               <div style={{ marginTop: "1rem" }}>
                 <img src={previewImage} alt="Preview" style={{ maxWidth: "200px", maxHeight: "200px" }} />
               </div>
             )}
-      
             <div>
               <FormLable style={{ color: localStorage.getItem("colorMode") }}> Picture</FormLable>
               <FormInputStudent
@@ -366,67 +316,12 @@ const handleDeleteAdmin = async (id) => {
             </div>
 
             <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Product Id</FormLable>
+              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Name</FormLable>
               <FormInputStudent
                type="text"
 
                placeholder=""
-               onChange={(e) => setProductId(e.target.value)}
-               
-              />
-            </div>
-
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Title</FormLable>
-              <FormInputStudent
-               type="text"
-
-               placeholder=""
-               onChange={(e) => setTitle(e.target.value)}
-               
-              />
-            </div>
-
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Price</FormLable>
-              <FormInputStudent
-               type="number"
-
-               placeholder=""
-               onChange={(e) => setPrice(e.target.value)}
-               
-              />
-            </div>
-
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Quantity</FormLable>
-              <FormInputStudent
-               type="number"
-
-               placeholder=""
-               onChange={(e) => setQuantity(e.target.value)}
-               
-              />
-            </div>
-
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Size</FormLable>
-              <FormInputStudent
-               type="text"
-
-               placeholder=""
-               onChange={(e) => setSize(e.target.value)}
-               
-              />
-            </div>
-
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Description</FormLable>
-              <FormTextAreaStudent
-               type="text"
-
-               placeholder=""
-               onChange={(e) => setDescription(e.target.value)}
+               onChange={(e) => setName(e.target.value)}
                
               />
             </div>
@@ -448,12 +343,12 @@ const handleDeleteAdmin = async (id) => {
           </AdmitButton3>
 
           <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Enter Product Id</FormLable>
+              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Enter Category Id</FormLable>
               <FormInputStudent
                 type="text"
                 required
                 placeholder=""
-                onChange={(e) => setProductId(e.target.value)}
+                onChange={(e) => setAdminUserId(e.target.value)}
               />
             </div>
 
@@ -484,7 +379,7 @@ const handleDeleteAdmin = async (id) => {
               fontSize: "1.5rem",
             }}
           >
-          Product List
+          Category List
           </u>
         </span>
 
@@ -503,7 +398,7 @@ const handleDeleteAdmin = async (id) => {
           style={{ backgroundColor: localStorage.getItem("colorMode") }}
         >
           <ColumnsDirective>
-            {productGrid.map((item, index) => (
+            {categoryGrid.map((item, index) => (
               <ColumnDirective key={index} {...item} />
             ))}
           </ColumnsDirective>
@@ -515,4 +410,4 @@ const handleDeleteAdmin = async (id) => {
   );
 }
 
-export default Product;
+export default Category;
