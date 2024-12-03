@@ -4,7 +4,7 @@ import Select from 'react-select';
 import styled from 'styled-components';
 import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable, FormTextAreaStudent } from '../../data/Profile';
 import { colors } from '../../data/Colors';
-import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, inventoryGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, productGrid, products } from '../../data/champion';
+import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, inventoryGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, paymentsGrid, productGrid, products } from '../../data/champion';
 import { GridComponent, ContextMenu, Edit, ExcelExport, Filter, Page, PdfExport, Resize, Sort, ColumnDirective, ColumnsDirective, Inject } from '@syncfusion/ej2-react-grids';
 import { Header } from '../../components';
 import Selector from '../../data/Selector';
@@ -13,12 +13,12 @@ import { apiServer } from '../../data/Endpoint';
 import { AES, enc } from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
 import { Search, Toolbar } from '@syncfusion/ej2-react-grids';
-import Bigselector from '../../data/Bigselector';
 
 
 
 
-const Inventory = () => {
+
+const Payment = () => {
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       try {
@@ -37,35 +37,7 @@ const Inventory = () => {
     return () => observer.disconnect();
   }, []);
 
-/*
-MenuId
-CategoryId
-Picture
-ProductId
-Title
-Price
-Quantity
-Size
-Description
-*/
-const [MenuList, setMenuList] = useState([])
-const [MenuId, setMenuId] = useState("")
-const [CategoryList, setCategoryList] = useState("")
-const [CategoryId, setCategoryId] = useState("")
-const [picture, setPicture] = useState("")
-const [ProductId, setProductId] = useState("")
-const [Title, setTitle] = useState("")
-const [Price, setPrice] = useState("")
-const [Quantity, setQuantity] = useState("")
-const [Size, setSize] = useState("")
-const [Description, setDescription] = useState("")
 
-
-
-
-  const [name, setName] = useState("")
-  const [section, setSection] = useState("")
-  const [AdminUserId,setAdminUserId] = useState("")
 
   const [AdminList, setAdminList] = useState([])
 
@@ -99,7 +71,7 @@ useEffect(()=>{
   const formData = new FormData();
   formData.append("AdminId",userInfo.UserId)
 
-fetch(apiServer+"ViewProductAdmin",{
+fetch(apiServer+"ViewAllPayment",{
   method: "POST",
       headers: {
         'UserId': userInfo.UserId,         
@@ -118,22 +90,11 @@ fetch(apiServer+"ViewProductAdmin",{
 
   return (
     <div>
-      <Header category="Product Management" title="Product" />
+      <Header category="Product Management" title="Payment History" />
 
 
       <div style={{ marginTop: "2rem", padding: "1rem" }}>
-        <span>
-          <u
-            style={{
-              color: localStorage.getItem("colorMode"),
-              textAlign: "center",
-              fontSize: "1.5rem",
-            }}
-          >
-         All Product List
-          </u>
-        </span>
-
+        
         <GridComponent
            id="gridcomp"
       toolbar={['Search']}  // Add the search bar
@@ -148,7 +109,7 @@ fetch(apiServer+"ViewProductAdmin",{
           style={{ backgroundColor: localStorage.getItem("colorMode") }}
         >
           <ColumnsDirective>
-            {inventoryGrid.map((item, index) => (
+            {paymentGrid.map((item, index) => (
               <ColumnDirective key={index} {...item} />
             ))}
           </ColumnsDirective>
@@ -160,4 +121,4 @@ fetch(apiServer+"ViewProductAdmin",{
   );
 }
 
-export default Inventory;
+export default Payment;

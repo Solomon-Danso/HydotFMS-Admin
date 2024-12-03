@@ -106,7 +106,7 @@ useEffect(()=>{
   .then(res=>res.json())
   .then(data=>{
     setExplore(data)
-    console.log(data)
+ 
   })
   .catch(err=>console.error(err))
   
