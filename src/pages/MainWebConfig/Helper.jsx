@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import "../Website/Website.css";
+import Select from 'react-select';
+import styled from 'styled-components';
 import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable } from '../../data/Profile';
 import { colors } from '../../data/Colors';
-import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, products } from '../../data/champion';
+import { contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, menuGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, products } from '../../data/champion';
 import { GridComponent, ContextMenu, Edit, ExcelExport, Filter, Page, PdfExport, Resize, Sort, ColumnDirective, ColumnsDirective, Inject } from '@syncfusion/ej2-react-grids';
 import { Header } from '../../components';
 import Selector from '../../data/Selector';
@@ -15,7 +17,7 @@ import { Search, Toolbar } from '@syncfusion/ej2-react-grids';
 
 
 
-const Category = () => {
+const Menu = () => {
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       try {
@@ -35,14 +37,12 @@ const Category = () => {
   }, []);
 
 
+  const editing = { allowDeleting: true, };
 
-
-  const [picture, setPicture] = useState("")
   const [name, setName] = useState("")
-  const [section, setSection] = useState("")
-  const [AdminUserId,setAdminUserId] = useState("")
-  const [previewImage, setPreviewImage] = useState(null); // For image preview
- 
+
+
+
   const [AdminList, setAdminList] = useState([])
 
 
@@ -75,7 +75,7 @@ useEffect(()=>{
   const formData = new FormData();
   formData.append("AdminId",userInfo.UserId)
 
-fetch(apiServer+"ViewCategory",{
+fetch(apiServer+"ViewMenu",{
   method: "POST",
       headers: {
         'UserId': userInfo.UserId,         
@@ -100,13 +100,11 @@ Show.showLoading("Processing Data");
   try {
 
 const formData = new FormData()
-formData.append("CategoryName", name)
-formData.append("CategoryPicture", picture)
-formData.append("Section", section)
+formData.append("MenuName", name)
 formData.append("AdminId",userInfo.UserId)
+//console.table(formData)
 
-
-    const response = await fetch(apiServer+"CreateCategory", {
+    const response = await fetch(apiServer+"CreateMenu", {
       method: "POST",
       headers: {
         'UserId': userInfo.UserId,         
@@ -137,51 +135,6 @@ formData.append("AdminId",userInfo.UserId)
 }
 
 
-const handleEditAdmin = async () => {
-
- 
-
-Show.showLoading("Processing Data");
-  try {
-
-const formData = new FormData()
-formData.append("CategoryName", name)
-formData.append("CategoryPicture", picture)
-formData.append("Section", section)
-formData.append("AdminId",userInfo.UserId)
-formData.append("CategoryId", AdminUserId) 
-
-
-    const response = await fetch(apiServer+"UpdateCategory", {
-      method: "POST",
-      headers: {
-        'UserId': userInfo.UserId,         
-        'SessionId': userInfo.SessionId    
-      },
-      body:formData
-    });
-
-    const data = await response.json();
- 
-
-    if (response.ok) {
-      
-      Show.hideLoading();
-
-      Show.Success(data.message);
-       
-      window.location.reload()
-      
-    } else {
-      Show.Attention(data.message);
-    }
-  } catch (error) {
-
-    Show.Attention("An error has occured");
-   
-  }
-
-}
 
 const handleDeleteAdmin = async (id) => {
 
@@ -249,74 +202,22 @@ const handleDeleteAdmin = async (id) => {
     }
   };
 
-const Section = [
-    {
-        name:"Section1"
-    },
-
-    {
-        name:"Section2"
-    },
-
-    {
-        name:"Section3"
-    },
-
-    {
-        name:"Section4"
-    },
-
-
-]
-
-
-const handleImageChange = (e) => {
-  const file = e.target.files[0];
-  setPicture(file);
-
-  // Preview the selected image
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    setPreviewImage(reader.result);
-  };
-  reader.readAsDataURL(file);
-};
-
-
-
   return (
     <div>
-      <Header category="Commerce" title="Category" />
+      <Header category="Commerce" title="Menu" />
 
       <div className="wwd-row">
 
         <div className="card" style={{ backgroundColor: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>
-          <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add  Category </div>
+          <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add  Menu </div>
 
           <AdmitStudentRole>
 
-          <Selector placeholder="Select Section" dataList={Section} dataKey="name" dataValue="name" setMethod={(method) => setSection(method)} />
- 
       
-          {previewImage && (
-              <div style={{ marginTop: "1rem" }}>
-                <img src={previewImage} alt="Preview" style={{ maxWidth: "200px", maxHeight: "200px" }} />
-              </div>
-            )}
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Picture</FormLable>
-              <FormInputStudent
-               type="file"
-               required
-               placeholder=""
-               accept=".jpg, .png, .jpeg, .ico, .webp"
-               onChange={handleImageChange}
-               
-              />
-            </div>
+           
 
             <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}> Name</FormLable>
+              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Menu Name</FormLable>
               <FormInputStudent
                type="text"
 
@@ -325,7 +226,6 @@ const handleImageChange = (e) => {
                
               />
             </div>
-
 
 
 
@@ -342,25 +242,7 @@ const handleImageChange = (e) => {
             >Add
           </AdmitButton3>
 
-          <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Enter Category Id</FormLable>
-              <FormInputStudent
-                type="text"
-                required
-                placeholder=""
-                onChange={(e) => setAdminUserId(e.target.value)}
-              />
-            </div>
-
-            <AdmitButton3
-            background={localStorage.getItem("colorMode")}
-            color="white"
-            border={localStorage.getItem("colorMode")}
-            style={{ marginBottom: "1rem" }}
-            onClick={()=>{ handleEditAdmin()}}
-            
-            >Edit
-          </AdmitButton3>
+         
 
 
 
@@ -379,7 +261,7 @@ const handleImageChange = (e) => {
               fontSize: "1.5rem",
             }}
           >
-          Category List
+          Menu List
           </u>
         </span>
 
@@ -394,11 +276,12 @@ const handleImageChange = (e) => {
           allowExcelExport
           allowPdfExport
           contextMenuItems={contextMenuItems}
+          editSettings={editing}
           actionBegin={handleActionBegin}
           style={{ backgroundColor: localStorage.getItem("colorMode") }}
         >
           <ColumnsDirective>
-            {categoryGrid.map((item, index) => (
+            {menuGrid.map((item, index) => (
               <ColumnDirective key={index} {...item} />
             ))}
           </ColumnsDirective>
@@ -410,4 +293,4 @@ const handleImageChange = (e) => {
   );
 }
 
-export default Category;
+export default Menu;
