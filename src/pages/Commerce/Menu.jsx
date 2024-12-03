@@ -332,7 +332,7 @@ const handleReset = () => {
 
   return (
     <div>
-      <Header category="E-commerce Mgmt" title="Products" />
+      <Header category="E-commerce Mgmt" title="Menu" />
 
 
 

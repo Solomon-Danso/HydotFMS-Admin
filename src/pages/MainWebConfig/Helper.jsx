@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import "../Website/Website.css";
 import Select from 'react-select';
 import styled from 'styled-components';
-import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable } from '../../data/Profile';
+import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable, FormTextAreaStudent } from '../../data/Profile';
 import { colors } from '../../data/Colors';
-import { contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, menuGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, products } from '../../data/champion';
+import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, inventoryGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentReference, productGrid, products } from '../../data/champion';
 import { GridComponent, ContextMenu, Edit, ExcelExport, Filter, Page, PdfExport, Resize, Sort, ColumnDirective, ColumnsDirective, Inject } from '@syncfusion/ej2-react-grids';
 import { Header } from '../../components';
 import Selector from '../../data/Selector';
@@ -13,11 +13,12 @@ import { apiServer } from '../../data/Endpoint';
 import { AES, enc } from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
 import { Search, Toolbar } from '@syncfusion/ej2-react-grids';
+import Bigselector from '../../data/Bigselector';
 
 
 
 
-const Menu = () => {
+const Inventory = () => {
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       try {
@@ -36,12 +37,35 @@ const Menu = () => {
     return () => observer.disconnect();
   }, []);
 
+/*
+MenuId
+CategoryId
+Picture
+ProductId
+Title
+Price
+Quantity
+Size
+Description
+*/
+const [MenuList, setMenuList] = useState([])
+const [MenuId, setMenuId] = useState("")
+const [CategoryList, setCategoryList] = useState("")
+const [CategoryId, setCategoryId] = useState("")
+const [picture, setPicture] = useState("")
+const [ProductId, setProductId] = useState("")
+const [Title, setTitle] = useState("")
+const [Price, setPrice] = useState("")
+const [Quantity, setQuantity] = useState("")
+const [Size, setSize] = useState("")
+const [Description, setDescription] = useState("")
 
-  const editing = { allowDeleting: true, };
+
+
 
   const [name, setName] = useState("")
-
-
+  const [section, setSection] = useState("")
+  const [AdminUserId,setAdminUserId] = useState("")
 
   const [AdminList, setAdminList] = useState([])
 
@@ -75,7 +99,7 @@ useEffect(()=>{
   const formData = new FormData();
   formData.append("AdminId",userInfo.UserId)
 
-fetch(apiServer+"ViewMenu",{
+fetch(apiServer+"ViewProductAdmin",{
   method: "POST",
       headers: {
         'UserId': userInfo.UserId,         
@@ -92,165 +116,10 @@ fetch(apiServer+"ViewMenu",{
 
 
 
-const handleCreateAdmin = async () => {
-
- 
-
-Show.showLoading("Processing Data");
-  try {
-
-const formData = new FormData()
-formData.append("MenuName", name)
-formData.append("AdminId",userInfo.UserId)
-//console.table(formData)
-
-    const response = await fetch(apiServer+"CreateMenu", {
-      method: "POST",
-      headers: {
-        'UserId': userInfo.UserId,         
-        'SessionId': userInfo.SessionId    
-      },
-      body:formData
-    });
-
-    const data = await response.json();
- 
-
-    if (response.ok) {
-      
-      Show.hideLoading();
-
-      Show.Success(data.message);
-       window.location.reload()
-      
-    } else {
-      Show.Attention(data.message);
-    }
-  } catch (error) {
-
-    Show.Attention("An error has occured");
-   
-  }
-
-}
-
-
-
-const handleDeleteAdmin = async (id) => {
-
- 
-
-  Show.showLoading("Processing Data");
-    try {
-  
-  const formData = new FormData()
-  formData.append("UserId", id) 
-  formData.append("AdminId",userInfo.UserId)
-
-  
-      const response = await fetch(apiServer+"DeleteAdmin", {
-        method: "POST",
-        headers: {
-          'UserId': userInfo.UserId,         
-          'SessionId': userInfo.SessionId    
-        },
-        body:formData
-      });
-  
-      const data = await response.json();
-   
-  
-      if (response.ok) {
-        
-        Show.hideLoading();
-  
-        Show.Success(data.message);
-         window.location.reload()
-        
-      } else {
-        Show.Attention(data.message);
-      }
-    } catch (error) {
-  
-      Show.Attention("An error has occured");
-     
-    }
-  
-  }
-
-
-
-
-
-
-
-  const handleEdit = (id) => {
-    console.log('Edit entry ID:', id);
-  };
-
-
-
-  const handleActionBegin = (args) => {
-    if (args.requestType === 'save') {
-      const updatedData = args.data;
-      handleEdit(updatedData);
-    }
-
-    if (args.requestType === 'delete') {
-      const deletedData = args.data[0]; 
-      handleDeleteAdmin(deletedData.UserId);
-    }
-  };
-
   return (
     <div>
-      <Header category="Commerce" title="Menu" />
+      <Header category="Product Management" title="Product" />
 
-      <div className="wwd-row">
-
-        <div className="card" style={{ backgroundColor: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>
-          <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "2rem" }}>Add  Menu </div>
-
-          <AdmitStudentRole>
-
-      
-           
-
-            <div>
-              <FormLable style={{ color: localStorage.getItem("colorMode") }}>Menu Name</FormLable>
-              <FormInputStudent
-               type="text"
-
-               placeholder=""
-               onChange={(e) => setName(e.target.value)}
-               
-              />
-            </div>
-
-
-
-           
-         
-          </AdmitStudentRole>
-
-          <AdmitButton3
-            background={localStorage.getItem("colorMode")}
-            color="white"
-            border={localStorage.getItem("colorMode")}
-            style={{ marginBottom: "1rem" }}
-            onClick={()=>{ handleCreateAdmin()}}       
-            >Add
-          </AdmitButton3>
-
-         
-
-
-
-        </div>
-
-     
-
-      </div>
 
       <div style={{ marginTop: "2rem", padding: "1rem" }}>
         <span>
@@ -261,7 +130,7 @@ const handleDeleteAdmin = async (id) => {
               fontSize: "1.5rem",
             }}
           >
-          Menu List
+         All Product List
           </u>
         </span>
 
@@ -276,12 +145,10 @@ const handleDeleteAdmin = async (id) => {
           allowExcelExport
           allowPdfExport
           contextMenuItems={contextMenuItems}
-          editSettings={editing}
-          actionBegin={handleActionBegin}
           style={{ backgroundColor: localStorage.getItem("colorMode") }}
         >
           <ColumnsDirective>
-            {menuGrid.map((item, index) => (
+            {inventoryGrid.map((item, index) => (
               <ColumnDirective key={index} {...item} />
             ))}
           </ColumnsDirective>
@@ -293,4 +160,4 @@ const handleDeleteAdmin = async (id) => {
   );
 }
 
-export default Menu;
+export default Inventory;
