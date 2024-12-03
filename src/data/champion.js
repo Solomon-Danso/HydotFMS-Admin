@@ -928,8 +928,8 @@ const ProductImage = (props) => {
   return (
     <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
       <div style={{ width: "calc(100% - 60px)" }}>
-      <p onClick={() => navigate(`/main/explore/${props.ProductId}`)} className="text-sm text-green-600">
-           Manage Slides
+      <p onClick={() => navigate(`/main/product/${props.ProductId}`)} className="text-sm text-green-600">
+           Add More Images
        </p>
       </div>
     </div>

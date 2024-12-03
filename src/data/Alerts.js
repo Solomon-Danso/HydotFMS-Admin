@@ -34,7 +34,7 @@ export const Show = {
   Confirm: function(message,onConfirm) {
     Swal.fire({
       title: 'Are you sure?',
-      text: message+"?",
+      text: message,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, proceed',
@@ -43,10 +43,7 @@ export const Show = {
       if (result.isConfirmed) {
         // If user selects 'Yes'
         onConfirm(); // Execute the passed callback function
-      } else {
-        // If user selects 'No'
-        window.location.reload(); // Reload the page
-      }
+      } 
     });
   }
 };

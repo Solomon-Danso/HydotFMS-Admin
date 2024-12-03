@@ -1,4 +1,4 @@
-const isLocalhost = window.location.hostname === "localhost";
+const isLocalhost = window.location.hostname != "localhost";
 
 // Set API endpoints based on environment
 export const apiServer = isLocalhost 

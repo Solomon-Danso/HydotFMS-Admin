@@ -21,8 +21,10 @@ const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [
       // Render media if available
       if (mediaColumn && cellValue) {
         const mediaSrc = cellValue;
-        const isImage = /\.(jpg|jpeg|png|gif)$/i.test(mediaSrc);
+        const isImage = /\.(jpg|webp|jpeg|png|gif)$/i.test(mediaSrc);
         const isVideo = /\.(mp4|webm|ogg)$/i.test(mediaSrc);
+
+
 
         return isImage ? (
           <img
