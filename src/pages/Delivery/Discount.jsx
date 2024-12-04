@@ -42,7 +42,7 @@ const Explore = () => {
 const [Explore, setExplore] = useState([])
 const [selectedProducts, setSelectedProducts] = useState([]);
 const [percentage, setPercentage] = useState(0);
-const [deadline, setDeadline] = useState(0);
+const [deadline, setDeadline] = useState();
 
 
 useEffect(() => {
@@ -72,6 +72,20 @@ useEffect(() => {
 }, []);
 
 
+const customDateFormat = (dateString) => {
+  const date = new Date(dateString);
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  };
+  return date.toLocaleString('en-US', options);
+};
+
+
 
 useEffect(()=>{
 
@@ -87,9 +101,22 @@ useEffect(()=>{
         body:formData
   })
   .then(res=>res.json())
-  .then(data=>{
-    setExplore(data)
- 
+  .then(data => {
+    // Check if data is an array and transform StartDate if it exists
+    if (Array.isArray(data)) {
+      const formattedData = data.map(item => {
+        if (item.ValidUntil) {
+          return {
+            ...item,
+            ValidUntil: customDateFormat(item.ValidUntil)
+          };
+        }
+        return item;
+      });
+      setExplore(formattedData);
+    } else {
+      setExplore(data);
+    }
   })
   .catch(err=>console.error(err))
   
@@ -100,31 +127,19 @@ useEffect(()=>{
 
 // Define the menu items array
 const menuItems = [
-  {
-    icon: <TfiLayoutSlider />,
-    text: "Add Product Images",
-    type: "navigate",
-    path: `/main/product/:ProductId`, // Placeholder for the dynamic segment
-  },
-
-
-  {
-    icon: <MdDelete color='#f06040'/>,
-    text: "Delete Product",
-    type: "function",
-    onClick: (ProductId) => {
-      handleConfirmation(ProductId); // Assuming this function is defined in your component
-    },
-    columnNames: ['ProductId'] // Specify the column name for the ID here
-  },
 
 
 ];
 
 
 const handleAssignProducts = async () => {
-  Show.showLoading("Processing Data...");
   
+
+  if(deadline ==null || deadline===undefined){
+    Show.Attention("Deadline is required ");
+    return
+  }
+  Show.showLoading("Processing Data...");
   try {
     const productPromises = selectedProducts.map(async (product) => {
       const formData = new FormData();

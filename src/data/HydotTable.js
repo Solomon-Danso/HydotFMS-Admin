@@ -10,7 +10,7 @@ import { apiMedia } from './Endpoint';
 import * as XLSX from 'xlsx';
 import { useEffect, useState } from 'react';
 
-const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [], RowSelector }) => { // Default to an empty array if not provided
+const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [],  RowSelector = () => {} }) => { // Default to an empty array if not provided
   const navigate = useNavigate(); 
 
   const columns = propColumns.map((column) => ({

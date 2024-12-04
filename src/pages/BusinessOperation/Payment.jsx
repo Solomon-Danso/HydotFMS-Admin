@@ -133,7 +133,7 @@ const customDateFormat = (dateString) => {
     minute: '2-digit',
     hour12: true
   };
-  return date.toLocaleString('en-US', options).replace(',', ' at');
+  return date.toLocaleString('en-US', options);
 };
 
 
