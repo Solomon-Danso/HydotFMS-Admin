@@ -292,7 +292,7 @@ const closeModal = () => {
 
         <HydotTable 
   columns={exploreGrid} 
-  data={sample} 
+  data={Explore} 
   media={exploreMediaGrid} 
   colorMode={localStorage.getItem("colorMode")}
   menuItems={menuItems}

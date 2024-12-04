@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import "../Website/Website.css";
-import {  checkingGrid, contextMenuItems, CustomerdeliveryGrid, deliveryGrid } from '../../data/champion';
-import { GridComponent, ContextMenu, Edit, ExcelExport, Filter, Page, PdfExport, Resize, Sort, ColumnDirective, ColumnsDirective, Inject } from '@syncfusion/ej2-react-grids';
+import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable, FormTextAreaStudent } from '../../data/Profile';
 import { Header } from '../../components';
+import Selector from '../../data/Selector';
+import { Show } from '../../data/Alerts';
 import { apiServer } from '../../data/Endpoint';
 import { AES, enc } from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
-import { Search, Toolbar } from '@syncfusion/ej2-react-grids';
+import HydotTable from '../../data/HydotTable';
+
+import { FaEye } from 'react-icons/fa6';
 
 
 
 
-
-const CustomerDeliver = () => {
+const Explore = () => {
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       try {
@@ -33,7 +35,12 @@ const CustomerDeliver = () => {
 
 
 
-  const [AdminList, setAdminList] = useState([])
+
+const [Explore, setExplore] = useState([])
+
+
+
+
 
 
 
@@ -60,60 +67,191 @@ useEffect(() => {
 }, []);
 
 
-useEffect(()=>{
 
+
+
+useEffect(() => {
   const formData = new FormData();
-  formData.append("AdminId",userInfo.UserId)
-  formData.append("DAdminId",userInfo.UserId)
+  formData.append("AdminId", userInfo.UserId);
 
-fetch(apiServer+"ViewSingleOrdersToDeliver",{
-  method: "POST",
-      headers: {
-        'UserId': userInfo.UserId,         
-        'SessionId': userInfo.SessionId    
-      },
-      body:formData
-})
-.then(res=>res.json())
-.then(data=>setAdminList(data))
-.catch(err=>console.error(err))
+  fetch(apiServer + "ViewSingleOrdersToDeliver", {
+    method: "POST",
+    headers: {
+      'UserId': userInfo.UserId,
+      'SessionId': userInfo.SessionId
+    },
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      // Check if data is an array and transform StartDate if it exists
+      if (Array.isArray(data)) {
+        const formattedData = data.map(item => {
+          if (item.created_at) {
+            return {
+              ...item,
+              created_at: customDateFormat(item.created_at)
+            };
+          }
+          return item;
+        });
+        setExplore(formattedData);
+      } else {
+        setExplore(data);
+      }
+    })
+    .catch(err => console.error(err));
+}, [userInfo]);
+
+// Custom date format function
+const customDateFormat = (dateString) => {
+  const date = new Date(dateString);
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  };
+  return date.toLocaleString('en-US', options);
+};
 
 
-},[userInfo])
+
+
+    
+
+
+
+// Define the menu items array
+const menuItems = [
+  {
+    icon: <FaEye />,
+    text: "View Details",
+    type: "navigate",
+    path: `/main/customerDeliveryList/:OrderId/:DeliveryId`, // Placeholder for the dynamic segment
+  },
+
+
+];
+
+
+
+ const exploreGrid = [
+  { accessorKey: "id", header: "ID" },
+  { accessorKey: "UserId", header: "User ID" },
+  { accessorKey: "OrderId", header: "Order ID" },
+  { accessorKey: "BaggingId", header: "Bagging ID" },
+ 
+  { accessorKey: "BAdminName", header: "Bagged By" },
+  { accessorKey: "OrderId", header: "Order ID" },
+  { accessorKey: "CheckerId", header: "Checker ID" },
+
+  { accessorKey: "CAdminName", header: "Checked By" },
+  { accessorKey: "DeliveryId", header: "Delivery ID" },
+
+  { accessorKey: "DAdminName", header: "Assigned To" },
+  { accessorKey: "Status", header: "Status" },
+ 
+ 
+  { accessorKey: "created_at", header: "Date Created" },
+
+];
+
+ const exploreMediaGrid = [
+
+];
+
+const sample = [
+  {
+    id: 1,
+    UserId: "U1001",
+    OrderId: "O5001",
+    ReferenceId: "R10001",
+    Phone: "123-456-7890",
+    Email: "user1@example.com",
+    created_at: customDateFormat("2024-12-01T08:30:00"),
+    CheckerId: "O5001",
+  },
+  {
+    id: 2,
+    UserId: "U1002",
+    OrderId: "O5002",
+    ReferenceId: "R10002",
+    Phone: "987-654-3210",
+    Email: "user2@example.com",
+    created_at: customDateFormat("2024-12-01T08:30:00"),
+  },
+  {
+    id: 3,
+    UserId: "U1003",
+    OrderId: "O5003",
+    ReferenceId: "R10003",
+    Phone: "555-111-2222",
+    Email: "user3@example.com",
+    created_at: customDateFormat("2024-12-01T08:30:00"),
+  },
+  {
+    id: 4,
+    UserId: "U1004",
+    OrderId: "O5004",
+    ReferenceId: "R10004",
+    Phone: "333-444-5555",
+    Email: "user4@example.com",
+    created_at: customDateFormat("2024-12-01T08:30:00"),
+  },
+  {
+    id: 5,
+    UserId: "U1005",
+    OrderId: "O5005",
+    ReferenceId: "R10005",
+    Phone: "666-777-8888",
+    Email: "user5@example.com",
+    created_at: customDateFormat("2024-12-01T08:30:00"),
+  },
+  
+];
+
+
+
+
 
 
 
   return (
     <div>
-      <Header category="Delivery" title="Customer Delivery" />
+      <Header category="E-commerce Mgmt" title="Customer Delivery" />
+
 
 
       <div style={{ marginTop: "2rem", padding: "1rem" }}>
-        
-        <GridComponent
-           id="gridcomp"
-      toolbar={['Search']}  // Add the search bar
- 
-          dataSource={AdminList}
-          enableHover={true}
-          allowPaging
-          allowSorting
-          allowExcelExport
-          allowPdfExport
-          contextMenuItems={contextMenuItems}
-          style={{ backgroundColor: localStorage.getItem("colorMode") }}
-        >
-          <ColumnsDirective>
-            {CustomerdeliveryGrid.map((item, index) => (
-              <ColumnDirective key={index} {...item} />
-            ))}
-          </ColumnsDirective>
-          <Inject services={[Resize, Sort, ContextMenu, Filter, Page, ExcelExport, Edit, PdfExport, Search, Toolbar]} />
+        <span>
+          <u
+            style={{
+              color: localStorage.getItem("colorMode"),
+              textAlign: "center",
+              fontSize: "1.5rem",
+            }}
+          >
+          Customer Delivery List
+          </u>
+        </span>
 
-        </GridComponent>
+        <HydotTable 
+  columns={exploreGrid} 
+  data={Explore} 
+  media={exploreMediaGrid} 
+  colorMode={localStorage.getItem("colorMode")}
+  menuItems={menuItems}
+
+/>;
+
+       
       </div>
     </div>
   );
 }
 
-export default CustomerDeliver;
+export default Explore;
+
