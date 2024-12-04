@@ -17,7 +17,7 @@ import {
 import CheckIcon from '@mui/icons-material/Check';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import VideoLabelIcon from '@mui/icons-material/VideoLabel';
-import { GiBookCover } from "react-icons/gi";
+import { GiBookCover, GiTakeMyMoney } from "react-icons/gi";
 import { FaEye } from 'react-icons/fa6';
 
 
@@ -46,8 +46,8 @@ const Explore = () => {
 
 
 const [Explore, setExplore] = useState([])
-
-
+const [selectedOrder, setSelectedOrder] = useState(null);
+const [amount, setAmount] = useState(0.0)
 
 
 
@@ -133,16 +133,10 @@ const customDateFormat = (dateString) => {
 
 // Define the menu items array
 const menuItems = [
-  {
-    icon: <FaEye />,
-    text: "View History",
-    type: "navigate",
-    path: `/main/collectionAccount/:AccountId`, // Placeholder for the dynamic segment
-  },
 
   {
-    icon: <FaEdit />,
-    text: "Edit Product",
+    icon: <GiTakeMyMoney />,
+    text: "Make Payment",
     type: "function",
     onClick: (OrderId,Status) => {
       payOnDeliveryStatus(OrderId,Status); // Assuming this function is defined in your component
@@ -182,6 +176,7 @@ const sample = [
     Phone: "123-456-7890",
     Email: "user1@example.com",
     created_at: customDateFormat("2024-12-01T08:30:00"),
+    Status: "Pay Now",
   },
   {
     id: 2,
@@ -191,6 +186,7 @@ const sample = [
     Phone: "987-654-3210",
     Email: "user2@example.com",
     created_at: customDateFormat("2024-12-01T08:30:00"),
+    Status: "Pay",
   },
   {
     id: 3,
@@ -200,6 +196,7 @@ const sample = [
     Phone: "555-111-2222",
     Email: "user3@example.com",
     created_at: customDateFormat("2024-12-01T08:30:00"),
+    Status: "Pay Now",
   },
   {
     id: 4,
@@ -209,6 +206,7 @@ const sample = [
     Phone: "333-444-5555",
     Email: "user4@example.com",
     created_at: customDateFormat("2024-12-01T08:30:00"),
+    Status: "Pay",
   },
   {
     id: 5,
@@ -218,20 +216,21 @@ const sample = [
     Phone: "666-777-8888",
     Email: "user5@example.com",
     created_at: customDateFormat("2024-12-01T08:30:00"),
+    Status: "Pay Now",
   },
   
 ];
 
 
-const handleConfirmPaymentOnDelivery = async (orderId, Amount) => {
+const handleConfirmPaymentOnDelivery = async () => {
 
   Show.showLoading("Processing Data");
 
   try {
     const formData = new FormData();
     formData.append("AdminId", userInfo.UserId);
-    formData.append("OrderId", orderId);
-    formData.append("Amount", Amount);
+    formData.append("OrderId", selectedOrder);
+    formData.append("Amount", amount);
 
     const response = await fetch(apiServer + "ConfirmPaymentOnDelivery", {
       method: "POST",
@@ -247,6 +246,7 @@ const handleConfirmPaymentOnDelivery = async (orderId, Amount) => {
     if (response.ok) {
       Show.hideLoading();
       Show.Success(data.message);
+      
       window.location.reload();
     } else {
       Show.Attention(data.message);
@@ -256,66 +256,17 @@ const handleConfirmPaymentOnDelivery = async (orderId, Amount) => {
   }
 };
 
-const payOnDeliveryStatus = (OrderId,Status) => {
-  // Open modal function
-  const openModal = () => {
-    const modal = document.getElementById(`modal-${OrderId}`);
-    modal.style.display = "flex"; // Show modal
-  };
-
-  // Close modal function
-  const closeModal = () => {
-    const modal = document.getElementById(`modal-${OrderId}`);
-    modal.style.display = "none"; // Hide modal
-  };
-
-  // Get the amount entered by the user
-  const getAmount = () => {
-    const amountInput = document.getElementById(`amt-${OrderId}`);
-    return amountInput.value;
-  };
-
-if(Status==="Pay Now"){
-  openModal()
-}else{
-  Show.Attention("Payment already completed")
-}
-
-
-
-  return (
-    <div className="image flex gap-4 items-center" style={{ width: "100%" }}>
-      {/* Modal */}
-      <div id={`modal-${OrderId}`} className="modal-overlay" style={{ display: "none" }}>
-        <div className="modal-container">
-          <h2>Make Payment for your order</h2>
-          <FormInputStudent
-            type="number"
-            id={`amt-${OrderId}`} // Unique ID for the amount input field based on OrderId
-            placeholder="Enter amount"
-            style={{ padding: "0.5rem", width: "100%", marginBottom: "1rem" }}
-          />
-          <div style={{display:"flex", flexDirection:"row", justifyContent:"space-between"}}>
-            <button
-              className="confirm-button"
-              onClick={() => handleConfirmPaymentOnDelivery(OrderId, getAmount())}
-            >
-              Pay
-            </button>
-            <button className="close-button" onClick={closeModal}>
-            Close
-          </button>
-          </div>
-         
-        </div>
-      </div>
-
-     
-
-    </div>
-  );
+const payOnDeliveryStatus = (OrderId, Status) => {
+  if (Status === "Pay Now") {
+    setSelectedOrder(OrderId);
+  } else {
+    Show.Attention("Payment already completed.");
+  }
 };
 
+const closeModal = () => {
+  setSelectedOrder(null);
+};
 
 
 
@@ -341,17 +292,52 @@ if(Status==="Pay Now"){
 
         <HydotTable 
   columns={exploreGrid} 
-  data={Explore} 
+  data={sample} 
   media={exploreMediaGrid} 
   colorMode={localStorage.getItem("colorMode")}
   menuItems={menuItems}
 
 />;
-
        
       </div>
+
+
+
+      {selectedOrder && (
+        <div className="modal-overlay" style={{ display: "flex" }}>
+          <div className="modal-container">
+            <h2>Make Payment for Order ID: {selectedOrder}</h2>
+            <FormInputStudent
+              type="number"
+              id="amount"
+              placeholder="Enter amount"
+              style={{ padding: "0.5rem", width: "100%", marginBottom: "1rem" }}
+              onChange={(e) => setAmount(e.target.value)}
+            />
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <button
+                className="confirm-button"
+                onClick={() =>
+                  handleConfirmPaymentOnDelivery()
+                }
+              >
+                Pay
+              </button>
+              <button className="close-button" onClick={closeModal}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+
+
+
+
     </div>
   );
+
 }
 
 export default Explore;
