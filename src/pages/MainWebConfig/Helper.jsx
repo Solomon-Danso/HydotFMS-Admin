@@ -1,217 +1,124 @@
-import {
-  MRT_GlobalFilterTextInput,
-  MRT_ToggleFiltersButton,
-  MantineReactTable,
-  useMantineReactTable,
-} from 'mantine-react-table';
-import { Box, Button, Flex, Menu, Text, Title } from '@mantine/core';
-import { useNavigate } from 'react-router-dom'; 
-import { apiMedia } from './Endpoint';
-import * as XLSX from 'xlsx';
-
-const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [], onRowSelectionChange }) => { // Default to an empty array if not provided
-  const navigate = useNavigate(); 
-
-  const columns = propColumns.map((column) => ({
-    ...column,
-    Cell: ({ cell }) => {
-      const mediaColumn = media?.find((mediaItem) => mediaItem.accessorKey === column.accessorKey);
-      const cellValue = cell.getValue();
-
-      // Render media if available
-      if (mediaColumn && cellValue) {
-        const mediaSrc = cellValue;
-        const isImage = /\.(jpg|webp|jpeg|png|gif)$/i.test(mediaSrc);
-        const isVideo = /\.(mp4|webm|ogg)$/i.test(mediaSrc);
+import React, { useEffect, useState } from 'react';
+import "../Website/Website.css";
+import Select from 'react-select';
+import styled from 'styled-components';
+import { AdmitButton3, AdmitStudentRole, FormInputStudent, FormLable, FormTextAreaStudent } from '../../data/Profile';
+import { colors } from '../../data/Colors';
+import { categoryGrid, contextMenuItems, continentList, countryList, customers, customersData, customersGrid, emailData, emailGrid, employeeData, employeeGrid, inventoryGrid, otherGrid, paymentData, paymentGrid, paymentMethod, paymentOnDeliveryGrid, paymentReference, paymentsGrid, productGrid, products } from '../../data/champion';
+import { GridComponent, ContextMenu, Edit, ExcelExport, Filter, Page, PdfExport, Resize, Sort, ColumnDirective, ColumnsDirective, Inject } from '@syncfusion/ej2-react-grids';
+import { Header } from '../../components';
+import Selector from '../../data/Selector';
+import { Show } from '../../data/Alerts';
+import { apiServer } from '../../data/Endpoint';
+import { AES, enc } from 'crypto-js';
+import { useNavigate } from 'react-router-dom';
+import { Search, Toolbar } from '@syncfusion/ej2-react-grids';
 
 
 
-        return isImage ? (
-          <img
-            alt={mediaColumn.header}
-            src={`${apiMedia}${mediaSrc}`}
-            style={{ width: '50px', height: '50px', borderRadius: '4px', objectFit: 'cover' }}
-          />
-        ) : isVideo ? (
-          <video
-            style={{ width: '50px', height: '50px', borderRadius: '4px', objectFit: 'cover' }}
-            muted
-            loop
-          >
-            <source src={`${apiMedia}${mediaSrc}`} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        ) : (
-          <Text>No media</Text>
-        );
+
+
+const PaymentOnDelivery = () => {
+  useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      try {
+        // Intentional empty block
+      } catch (err) {
+        if (err.message === 'ResizeObserver loop completed with undelivered notifications.') {
+          console.warn('ResizeObserver loop error detected.');
+        } else {
+          throw err;
+        }
       }
+    });
 
-      // Default rendering for cell value if no media
-      return <Text>{cellValue ?? 'No data'}</Text>;
-    },
-  }));
+    observer.observe(document.body); // Assuming observing the body for changes
 
-  const data = propData || [];
-
-  const table = useMantineReactTable({
-    columns,
-    data,
-    enableColumnFilterModes: true,
-    enableColumnOrdering: true,
-    enableFacetedValues: true,
-    enableGrouping: true,
-    enablePinning: true,
-    enableRowActions: true,
-    enableRowSelection: true,
-
-    onRowSelectionChange: () => {
-      // Iterate over each row and call onRowSelectionChange for each row
-      data.forEach((row) => {
-        onRowSelectionChange(row); // Call onRowSelectionChange with each row
-      });
-    },
-    
-    
-    initialState: { showColumnFilters: true, showGlobalFilter: true },
-    paginationDisplayMode: 'pages',
-    positionToolbarAlertBanner: 'bottom',
-    mantinePaginationProps: {
-      radius: 'xl',
-      size: 'lg',
-    },
-    mantineSearchTextInputProps: {
-      placeholder: 'Search for anything',
-    },
-    renderDetailPanel: ({ row }) => (
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-          padding: '16px',
-        }}
-      >
-        {media?.map(({ accessorKey, header }) => {
-          const mediaSrc = row.original[accessorKey];
-          if (!mediaSrc) return null;
-          const isImage = /\.(jpg|jpeg|webp|png|gif)$/i.test(mediaSrc);
-          const isVideo = /\.(mp4|webm|ogg)$/i.test(mediaSrc);
-          return (
-            <Box key={accessorKey} sx={{ width: '100%', textAlign: 'center' }}>
-              <Title order={4} mb="sm">{header}</Title>
-              {isImage ? (
-                <img
-                  alt={header}
-                  src={`${apiMedia}${mediaSrc}`}
-                  style={{
-                    borderRadius: '8px',
-                    width: '90vw',
-                    maxWidth: '40%',
-                    height: 'auto',
-                    objectFit: 'cover',
-                  }}
-                />
-              ) : isVideo ? (
-                <video
-                  controls
-                  style={{
-                    borderRadius: '8px',
-                    width: '90vw',
-                    maxWidth: '40%',
-                    height: 'auto',
-                    objectFit: 'cover',
-                  }}
-                >
-                  <source src={`${apiMedia}${mediaSrc}`} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              ) : (
-                <Text>No media available</Text>
-              )}
-            </Box>
-          );
-        })}
-      </Box>
-    ),
-
-    renderRowActionMenuItems: ({ row }) => (
-      <>
-        {menuItems.map((item, index) => (
-          <Menu.Item
-            key={index}
-            icon={item.icon}
-            onClick={() => {
-              if (item.type === "navigate") {
-                let pathWithParams = item.path;
-                const regex = /:([a-zA-Z0-9]+)/g; 
-                pathWithParams = pathWithParams.replace(regex, (match, key) => {
-                  return row.original[key] || match; 
-                });
-                navigate(pathWithParams); 
-              } else if (item.type === "function") {
-                const params = item.columnNames.map(colName => row.original[colName]);
-                item.onClick(...params); 
-              }
-            }}
-          >
-            {item.text}
-          </Menu.Item>
-        ))}
-      </>
-    ),
-
-    renderTopToolbar: ({ table }) => {
-      const exportToExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(data);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-      
-        // Create a formatted date string
-        const now = new Date();
-        const formattedDate = now.toISOString().slice(0, 19).replace('T', '_').replace(/:/g, '-'); // Format as YYYY-MM-DD_HH-MM-SS
-        const filename = `data_${formattedDate}.xlsx`; // Set the filename
-      
-        XLSX.writeFile(workbook, filename); // Use the new filename
-      };
-      
-      const exportToCSV = () => {
-        const csvData = data.map(row => Object.values(row).join(',')).join('\n');
-        const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute('download', 'data.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      };
-
-      return (
-        <Flex p="md" justify="space-between">
-          <Flex gap="xs">
-            <MRT_GlobalFilterTextInput table={table} />
-            <MRT_ToggleFiltersButton table={table} />
-          </Flex>
-          <Flex sx={{ gap: '8px' }}>
+    return () => observer.disconnect();
+  }, []);
 
 
-            <Button color="yellow" onClick={exportToExcel} variant="filled">
-              Export to Excel
-            </Button>
-            <Button color="teal" onClick={exportToCSV} variant="filled">
-              Export to CSV
-            </Button>
-          </Flex>
-        </Flex>
-      );
-    },
-  });
+
+  const [AdminList, setAdminList] = useState([])
+
+
+
+  const navigate = useNavigate()
+
+const [userInfo, setUserInfo] = useState({});
+
+useEffect(() => {
+ try{
+
+
+   const encryptedData = sessionStorage.getItem("userDataEnc");
+   const encryptionKey = '$2a$11$3lkLrAOuSzClGFmbuEAYJeueRET0ujZB2TkY9R/E/7J1Rr2u522CK';
+   const decryptedData = AES.decrypt(encryptedData, encryptionKey);
+   const decryptedString = decryptedData.toString(enc.Utf8);
+   const parsedData = JSON.parse(decryptedString);
+     setUserInfo(parsedData);
+
+
+ }catch(error){
+  navigate("/")
+ }
+
+}, []);
+
+
+useEffect(()=>{
+
+  const formData = new FormData();
+  formData.append("AdminId",userInfo.UserId)
+
+fetch(apiServer+"ViewPaymentOnDelivery",{
+  method: "POST",
+      headers: {
+        'UserId': userInfo.UserId,         
+        'SessionId': userInfo.SessionId    
+      },
+      body:formData
+})
+.then(res=>res.json())
+.then(data=>setAdminList(data))
+.catch(err=>console.error(err))
+
+
+},[userInfo])
+
+
 
   return (
-    <MantineReactTable
-      table={table}
-      id="mantine-react-table"
-    />
-  );
-};
+    <div>
+      <Header category="Product Management" title="Payment On Delivery" />
 
-export default HydotTable;
+
+      <div style={{ marginTop: "2rem", padding: "1rem" }}>
+        
+        <GridComponent
+           id="gridcomp"
+      toolbar={['Search']}  // Add the search bar
+ 
+          dataSource={AdminList}
+          enableHover={true}
+          allowPaging
+          allowSorting
+          allowExcelExport
+          allowPdfExport
+          contextMenuItems={contextMenuItems}
+          style={{ backgroundColor: localStorage.getItem("colorMode") }}
+        >
+          <ColumnsDirective>
+            {paymentOnDeliveryGrid.map((item, index) => (
+              <ColumnDirective key={index} {...item} />
+            ))}
+          </ColumnsDirective>
+          <Inject services={[Resize, Sort, ContextMenu, Filter, Page, ExcelExport, Edit, PdfExport, Search, Toolbar]} />
+
+        </GridComponent>
+      </div>
+    </div>
+  );
+}
+
+export default PaymentOnDelivery;
