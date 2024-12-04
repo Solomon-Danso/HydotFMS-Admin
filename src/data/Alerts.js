@@ -31,6 +31,7 @@ export const Show = {
   hideLoading: function() {
     Swal.close();
   },
+
   Confirm: function(message,onConfirm) {
     Swal.fire({
       title: 'Are you sure?',
@@ -45,7 +46,36 @@ export const Show = {
         onConfirm(); // Execute the passed callback function
       } 
     });
-  }
+  },
+
+
+  ConfirmPro: function (message, onConfirm, onNotConfirm) {
+    Swal.fire({
+      title: 'What Action Do You Want To Perform?',
+      text: message,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Apply Discount',
+      cancelButtonText: 'Revoke Discount',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log("Yes Clicked");
+        if (onConfirm) onConfirm(); // Ensure the callback exists
+      } else {
+        console.log("No Clicked");
+        if (onNotConfirm) onNotConfirm(); // Ensure the callback exists
+      }
+    });
+  },
+  
+
+
+
+
+
+
+
+
 };
 
 

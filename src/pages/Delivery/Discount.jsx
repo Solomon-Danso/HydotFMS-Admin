@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import "../Website/Website.css";
-import { AdmitButton3, AdmitStudentRole, FormInputDiscount, FormInputStudent, FormLable } from '../../data/Profile';
+import { AdmitButton3, AdmitStudentRole, FormInputDiscount, FormInputStudent, FormLable, FormTextAreaStudent } from '../../data/Profile';
 import { Header } from '../../components';
-import Bigselector from '../../data/Bigselector';
+import { Show } from '../../data/Alerts';
+import { apiServer } from '../../data/Endpoint';
 import { AES, enc } from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
-import { apiMedia, apiServer } from '../../data/Endpoint';
-import { Show } from '../../data/Alerts';
-
-const Roles = () => {
-  const navigate = useNavigate();
-  const [userInfo, setUserInfo] = useState({});
-  const [CustomerId, setCustomerId] = useState("");
-  const [StaffMembers, setStaffMembers] = useState([]);
-  const [selectedProducts, setSelectedProducts] = useState([]);
-  const [products, setProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [percentage, setPercentage] = useState(0);
-  const [deadline, setDeadline] = useState(0);
+import { TfiLayoutSlider } from 'react-icons/tfi';
+import { MdAddTask, MdAssignmentAdd, MdDelete } from 'react-icons/md';
+import HydotTable from '../../data/HydotTable';
+import {
+  Stepper, Step, StepLabel, Button, Typography, Box
+} from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 
 
 
 
+
+const Explore = () => {
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       try {
@@ -35,166 +32,276 @@ const Roles = () => {
       }
     });
 
-    observer.observe(document.body);
+    observer.observe(document.body); // Assuming observing the body for changes
+
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    try {
-      const encryptedData = sessionStorage.getItem("userDataEnc");
-      const encryptionKey = '$2a$11$3lkLrAOuSzClGFmbuEAYJeueRET0ujZB2TkY9R/E/7J1Rr2u522CK';
-      const decryptedData = AES.decrypt(encryptedData, encryptionKey);
-      const decryptedString = decryptedData.toString(enc.Utf8);
-      const parsedData = JSON.parse(decryptedString);
-      setUserInfo(parsedData);
-    } catch (error) {
-      navigate("/");
-    }
-  }, [navigate]);
 
-  useEffect(() => {
-    if (userInfo.UserId) {
+
+const [Explore, setExplore] = useState([])
+const [selectedProducts, setSelectedProducts] = useState([]);
+const [percentage, setPercentage] = useState(0);
+const [deadline, setDeadline] = useState(0);
+
+
+useEffect(() => {
+  console.log("Selected Products:", selectedProducts);
+}, [selectedProducts]);
+
+  const navigate = useNavigate()
+
+const [userInfo, setUserInfo] = useState({});
+
+useEffect(() => {
+ try{
+
+
+   const encryptedData = sessionStorage.getItem("userDataEnc");
+   const encryptionKey = '$2a$11$3lkLrAOuSzClGFmbuEAYJeueRET0ujZB2TkY9R/E/7J1Rr2u522CK';
+   const decryptedData = AES.decrypt(encryptedData, encryptionKey);
+   const decryptedString = decryptedData.toString(enc.Utf8);
+   const parsedData = JSON.parse(decryptedString);
+     setUserInfo(parsedData);
+
+
+ }catch(error){
+  navigate("/")
+ }
+
+}, []);
+
+
+
+useEffect(()=>{
+
+    const formData = new FormData();
+    formData.append("AdminId",userInfo.UserId)
+  
+  fetch(apiServer+"ViewProductAdmin",{
+    method: "POST",
+        headers: {
+          'UserId': userInfo.UserId,         
+          'SessionId': userInfo.SessionId    
+        },
+        body:formData
+  })
+  .then(res=>res.json())
+  .then(data=>{
+    setExplore(data)
+ 
+  })
+  .catch(err=>console.error(err))
+  
+  
+  },[userInfo])
+
+
+
+// Define the menu items array
+const menuItems = [
+  {
+    icon: <TfiLayoutSlider />,
+    text: "Add Product Images",
+    type: "navigate",
+    path: `/main/product/:ProductId`, // Placeholder for the dynamic segment
+  },
+
+
+  {
+    icon: <MdDelete color='#f06040'/>,
+    text: "Delete Product",
+    type: "function",
+    onClick: (ProductId) => {
+      handleConfirmation(ProductId); // Assuming this function is defined in your component
+    },
+    columnNames: ['ProductId'] // Specify the column name for the ID here
+  },
+
+
+];
+
+
+const handleAssignProducts = async () => {
+  Show.showLoading("Processing Data...");
+  
+  try {
+    const productPromises = selectedProducts.map(async (product) => {
       const formData = new FormData();
+      formData.append("DiscountPercentage", percentage);
+      formData.append("ProductId", product.ProductId);
       formData.append("AdminId", userInfo.UserId);
-      
-      fetch(apiServer + "ViewAllAdmin", {
+      formData.append("ValidUntil", deadline);
+
+      const response = await fetch(apiServer + "RunPromotion", {
         method: "POST",
         headers: {
           'UserId': userInfo.UserId,
           'SessionId': userInfo.SessionId
         },
         body: formData
-      })
-        .then(res => res.json())
-        .then(data => setStaffMembers(data))
-        .catch(error => console.error(error));
-    }
-  }, [userInfo]);
+      });
 
-  useEffect(() => {
-    if (userInfo.UserId) {
-      const formData = new FormData();
-      formData.append("AdminId", userInfo.UserId);
+      const data = await response.json();
 
-      fetch(apiServer + "ViewProductAdmin", {
-        method: "POST",
-        headers: {
-          'UserId': userInfo.UserId,
-          'SessionId': userInfo.SessionId
-        },
-        body: formData
-      })
-        .then(res => res.json())
-        .then(data => {
-          setProducts(Array.isArray(data) ? data : []);
-        })
-        .catch(error => console.error(error));
-    }
-  }, [userInfo]);
-
-  const handleProductChange = (product) => {
-    setSelectedProducts(prevSelected => {
-      if (prevSelected.includes(product)) {
-        return prevSelected.filter(p => p !== product);
-      } else {
-        return [...prevSelected, product];
+      if (!response.ok) {
+        throw new Error(data.message || "An error has occurred");
       }
+
+      return data.message;
     });
-  };
 
-  const handleAssignProducts = async () => {
-    Show.showLoading("Processing Data...");
-    
-    try {
-      const productPromises = selectedProducts.map(async (product) => {
-        const formData = new FormData();
-        formData.append("DiscountPercentage", percentage);
-        formData.append("ProductId", product.ProductId);
-        formData.append("AdminId", userInfo.UserId);
-        formData.append("ValidUntil", deadline);
+    const results = await Promise.all(productPromises);
+
+    Show.hideLoading();
+
+    results.forEach(message => Show.Success(message));
+
+  } catch (error) {
+    Show.hideLoading();
+    Show.Attention(error.message || "An error has occurred");
+  }
+};
+
+const handleRevertProducts = async () => {
+  Show.showLoading("Processing Data...");
   
-        const response = await fetch(apiServer + "RunPromotion", {
-          method: "POST",
-          headers: {
-            'UserId': userInfo.UserId,
-            'SessionId': userInfo.SessionId
-          },
-          body: formData
-        });
-  
-        const data = await response.json();
-  
-        if (!response.ok) {
-          throw new Error(data.message || "An error has occurred");
-        }
-  
-        return data.message;
+  try {
+    const productPromises = selectedProducts.map(async (product) => {
+      const formData = new FormData();
+      formData.append("ProductId", product.ProductId);
+      formData.append("AdminId", userInfo.UserId);
+
+      const response = await fetch(apiServer + "RevertPromotion", {
+        method: "POST",
+        headers: {
+          'UserId': userInfo.UserId,
+          'SessionId': userInfo.SessionId
+        },
+        body: formData
       });
-  
-      const results = await Promise.all(productPromises);
-  
-      Show.hideLoading();
-  
-      results.forEach(message => Show.Success(message));
-  
-    } catch (error) {
-      Show.hideLoading();
-      Show.Attention(error.message || "An error has occurred");
-    }
-  };
 
-  const handleRevertProducts = async () => {
-    Show.showLoading("Processing Data...");
-    
-    try {
-      const productPromises = selectedProducts.map(async (product) => {
-        const formData = new FormData();
-        formData.append("ProductId", product.ProductId);
-        formData.append("AdminId", userInfo.UserId);
-  
-        const response = await fetch(apiServer + "RevertPromotion", {
-          method: "POST",
-          headers: {
-            'UserId': userInfo.UserId,
-            'SessionId': userInfo.SessionId
-          },
-          body: formData
-        });
-  
-        const data = await response.json();
-  
-        if (!response.ok) {
-          throw new Error(data.message || "An error has occurred");
-        }
-  
-        return data.message;
-      });
-  
-      const results = await Promise.all(productPromises);
-  
-      Show.hideLoading();
-  
-      results.forEach(message => Show.Success(message));
-  
-    } catch (error) {
-      Show.hideLoading();
-      Show.Attention(error.message || "An error has occurred");
-    }
-  };
+      const data = await response.json();
 
-  const filteredProducts = products.filter(product =>
-    product.Title.toLowerCase().includes(searchTerm.toLowerCase())
+      if (!response.ok) {
+        throw new Error(data.message || "An error has occurred");
+      }
+
+      return data.message;
+    });
+
+    const results = await Promise.all(productPromises);
+
+    Show.hideLoading();
+
+    results.forEach(message => Show.Success(message));
+
+  } catch (error) {
+    Show.hideLoading();
+    Show.Attention(error.message || "An error has occurred");
+  }
+};
+
+
+const handleConfirmation = () => {
+  console.log("Assign Products Function:", handleAssignProducts);
+  console.log("Revert Products Function:", handleRevertProducts);
+
+  Show.ConfirmPro(
+    "Select Your Action",
+    handleAssignProducts, // Pass the reference
+    handleRevertProducts // Pass the reference
   );
+};
+
+
+
+
+ const exploreGrid = [
+  { accessorKey: "id", header: "ID" },
+  { accessorKey: "ProductId", header: "Product ID" },
+  { accessorKey: "Picture", header: "Picture" },
+  { accessorKey: "Title", header: "Title" },
+  { accessorKey: "Price", header: "Price" },
+  { accessorKey: "Quantity", header: "Quantity" },
+  { accessorKey: "ViewsCounter", header: "Views" },
+  { accessorKey: "PurchaseCounter", header: "Purchases" },
+  { accessorKey: "DiscountPrice", header: "Discounted Price" },
+  { accessorKey: "DiscountPercentage", header: "Discount %" },
+  { accessorKey: "ValidUntil", header: "ValidUntil" },
+];
+
+ const exploreMediaGrid = [
+  { accessorKey: "Picture", header: "Picture" }
+];
+
+
+
+
+
+
+
+const [activeStep, setActiveStep] = useState(0);
+const steps = ['Enter Details',  'Complete'];
+
+const getStepIcon = (step) => {
+  switch (step) {
+    
+    case 0:
+      return  <MdAssignmentAdd size={"2rem"}/>;
+    case 1:
+      return <MdAddTask size={"2rem"} />;
+    default:
+      return <CheckIcon size={"2rem"} />;
+  }
+};
+
+
+
+const handleNext = () => {
+  setActiveStep((prevActiveStep) => prevActiveStep + 1);
+};
+
+const handleBack = () => {
+  setActiveStep((prevActiveStep) => prevActiveStep - 1);
+};
+
+const handleReset = () => {
+  setActiveStep(0);
+};
+
 
   return (
     <div>
-      <Header category="Product Management" title="Discount" />
-      <div className="wwd-column">
-        <div className="Bigcard" style={{ backgroundColor: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white", padding: "2rem" }}>
-          <div className="sec-title" style={{ color: localStorage.getItem("colorMode"), padding: "1rem" }}>Select Products</div>
+      <Header category="E-commerce Mgmt" title="Discounts" />
 
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between", flexWrap: "wrap", marginBottom: "1rem" }}>
-            <div style={{ flex: 1, marginRight: "1rem" }}>
+
+
+
+<div className="wwd-row">
+      <div className="card" style={{ backgroundColor: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white", padding: "2rem" }}>
+        
+       <Stepper activeStep={activeStep} alternativeLabel sx={{ padding: '2rem 0' }}>
+          {steps.map((label, index) => (
+            <Step key={label}>
+              <StepLabel sx={{ color: localStorage.getItem("themeMode") === "Light" ? "orange" : "blue" }} StepIconComponent={() => getStepIcon(index)} >
+               <span style={{ color: localStorage.getItem("themeMode") === "Light" ? "orange" : "blue" }}>{label}</span> 
+                
+                </StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        
+        <Box sx={{ padding: 3 }}>
+          
+
+
+
+          {activeStep === 0 && (
+            <div>
+             
+              
+             <div style={{ flex: 1, marginRight: "1rem" }}>
               <FormLable style={{ color: localStorage.getItem("colorMode") }}>Discount Percentage</FormLable>
               <FormInputDiscount
                 type="number"
@@ -213,98 +320,79 @@ const Roles = () => {
                 onChange={(e)=>{setDeadline(e.target.value)}}
               />
             </div>
-          </div>
-
-          <input
-            type="text"
-            placeholder="Search Products..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ marginBottom: "1rem", padding: "1rem", width: "100%", borderRadius:"1rem" }}
-          />
-
-          <div className='productSelector'>
-            <div className="product-table-container">
-              <table className="product-table">
-                <thead>
-                  <tr>
-                    <th style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>Select</th>
-                    <th style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>Picture</th>
-                    <th style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>Title</th>
-                    <th style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>Price</th>
-                    <th style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>Quantity</th>
-                    <th style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>Size</th>
-                    <th style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>Views</th>
-                    <th style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>Purchases</th>
-                    <th style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>Discounted Price</th>
-                    <th style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>Discount Percentage</th>
-                    <th style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>Deadline</th>
 
 
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredProducts.map((product) => (
-                    <tr key={product.ProductId}>
-                      <td style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>
-                        <input
-                          type="checkbox"
-                          value={product.ProductId}
-                          onChange={() => handleProductChange(product)}
-                          checked={selectedProducts.includes(product)}
-                          style={{
-                            width: "10px",
-                            height: "10px",
-                            transform: "scale(2)",
-                          }}
-                        />
-                      </td>
-                      <td style={{ color: localStorage.getItem("themeMode") === "Light" ? "#26293C" : "white" }}>
-                        <img src={apiMedia + product.Picture} alt={product.Title} className="product-image" />
-                      </td>
-                      <td style={{ color: localStorage.getItem("themeMode") !== "Light" ? "#26293C" : "white" }}>{product.Title}</td>
-                      <td style={{ color: localStorage.getItem("themeMode") !== "Light" ? "#26293C" : "white" }}>{product.Price}</td>
-                      <td style={{ color: localStorage.getItem("themeMode") !== "Light" ? "#26293C" : "white" }}>{product.Quantity}</td>
-                      <td style={{ color: localStorage.getItem("themeMode") !== "Light" ? "#26293C" : "white" }}>{product.Size}</td>
-                      <td style={{ color: localStorage.getItem("themeMode") !== "Light" ? "#26293C" : "white" }}>{product.ViewsCounter}</td>
-                      <td style={{ color: localStorage.getItem("themeMode") !== "Light" ? "#26293C" : "white" }}>{product.PurchaseCounter}</td>
-                      <td style={{ color: localStorage.getItem("themeMode") !== "Light" ? "#26293C" : "white" }}>{product.DiscountPrice}</td>
-                      <td style={{ color: localStorage.getItem("themeMode") !== "Light" ? "#26293C" : "white" }}>{product.DiscountPercentage} %</td>
-                      <td style={{ color: localStorage.getItem("themeMode") !== "Light" ? "#26293C" : "white" }}>{product.ValidUntil}</td>
+
              
-                    
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
             </div>
-          </div>
+          )}
 
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
-            <AdmitButton3
-              background={localStorage.getItem("colorMode")}
-              color="white"
-              border={localStorage.getItem("colorMode")}
-              style={{ marginBottom: "1rem" }}
-              onClick={handleAssignProducts}
-            >
-              Apply Discount
-            </AdmitButton3>
+          {activeStep === 1 && (
+            <div>
+              <Typography>
+              <span style={{ color: localStorage.getItem("themeMode") === "Light" ? "orange" : "blue" }}> All steps completed. Ready to submit.</span> 
+               </Typography>
+              <AdmitButton3
+                background={localStorage.getItem("colorMode")}
+                color="white"
+                border={localStorage.getItem("colorMode")}
+                onClick={handleConfirmation}
+              >
+                Submit
+              </AdmitButton3>
+            </div>
+          )}
 
-            <AdmitButton3
-              background={localStorage.getItem("colorMode")}
-              color="white"
-              border={localStorage.getItem("colorMode")}
-              style={{ marginBottom: "1rem" }}
-              onClick={handleRevertProducts}
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2rem" }}>
+            <Button
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              sx={{ mt: 2, mr: 1 }}
             >
-              Revoke Discount
-            </AdmitButton3>
+              Back
+            </Button>
+            <Button
+              variant="contained"
+              onClick={activeStep === steps.length - 1 ? handleReset : handleNext}
+              sx={{ mt: 2 }}
+            >
+              {activeStep === steps.length - 1 ? 'Reset' : 'Next'}
+            </Button>
           </div>
-        </div>
+        </Box>
+      </div>
+    </div>
+
+
+      <div style={{ marginTop: "2rem", padding: "1rem" }}>
+        <span>
+          <u
+            style={{
+              color: localStorage.getItem("colorMode"),
+              textAlign: "center",
+              fontSize: "1.5rem",
+            }}
+          >
+          Product List
+          </u>
+        </span>
+
+        <HydotTable 
+  columns={exploreGrid} 
+  data={Explore} 
+  media={exploreMediaGrid} 
+  colorMode={localStorage.getItem("colorMode")}
+  menuItems={menuItems}
+  RowSelector={(selectedRows) => {
+    setSelectedProducts(selectedRows); // Update the selected products
+  }}
+/>;
+
+       
       </div>
     </div>
   );
-};
+}
 
-export default Roles;
+export default Explore;
+

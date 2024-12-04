@@ -8,8 +8,9 @@ import { Box, Button, Flex, Menu, Text, Title } from '@mantine/core';
 import { useNavigate } from 'react-router-dom'; 
 import { apiMedia } from './Endpoint';
 import * as XLSX from 'xlsx';
+import { useEffect, useState } from 'react';
 
-const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [] }) => { // Default to an empty array if not provided
+const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [], RowSelector }) => { // Default to an empty array if not provided
   const navigate = useNavigate(); 
 
   const columns = propColumns.map((column) => ({
@@ -53,6 +54,8 @@ const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [
 
   const data = propData || [];
 
+  const [rowSelection, setRowSelection] = useState({}); //ts type available
+ 
   const table = useMantineReactTable({
     columns,
     data,
@@ -63,6 +66,12 @@ const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [
     enablePinning: true,
     enableRowActions: true,
     enableRowSelection: true,
+
+  onRowSelectionChange: setRowSelection,
+  state: { rowSelection },
+
+    
+    
     initialState: { showColumnFilters: true, showGlobalFilter: true },
     paginationDisplayMode: 'pages',
     positionToolbarAlertBanner: 'bottom',
@@ -196,6 +205,16 @@ const HydotTable = ({ columns: propColumns, data: propData, media, menuItems = [
       );
     },
   });
+
+
+  
+  useEffect(()=>{
+    console.log("TheRow", table.getSelectedRowModel().rows.map(row => row.original));
+
+    RowSelector(table.getSelectedRowModel().rows.map(row => row.original));
+    
+  },[rowSelection])
+
 
   return (
     <MantineReactTable
