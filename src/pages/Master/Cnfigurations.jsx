@@ -13,6 +13,9 @@ import { apiServer } from '../../data/Endpoint';
 import { AES, enc } from 'crypto-js';
 import { useNavigate } from 'react-router-dom';
 import { Search, Toolbar } from '@syncfusion/ej2-react-grids';
+import HydotTable from '../../data/HydotTable';
+import { FaEdit } from 'react-icons/fa';
+import { ImBlocked } from 'react-icons/im';
 
 
 
@@ -128,6 +131,7 @@ useEffect(() => {
         .then(res => res.json())
         .then(data => {
          setdeliverConfigList(data); 
+         console.log(data)
         })
         .catch(err => console.error(err));
     }
@@ -261,11 +265,11 @@ const handleDeleteAdmin = async (id) => {
     try {
   
   const formData = new FormData()
-  formData.append("UserId", id) 
+  formData.append("Id", id) 
   formData.append("AdminId",userInfo.UserId)
 
   
-      const response = await fetch(apiServer+"DeleteAdmin", {
+      const response = await fetch(apiServer+"DeletePaymentMethods", {
         method: "POST",
         headers: {
           'UserId': userInfo.UserId,         
@@ -307,17 +311,7 @@ const handleDeleteAdmin = async (id) => {
 
 
 
-  const handleActionBegin = (args) => {
-    if (args.requestType === 'save') {
-      const updatedData = args.data;
-      handleEdit(updatedData);
-    }
-
-    if (args.requestType === 'delete') {
-      const deletedData = args.data[0]; 
-      handleDeleteAdmin(deletedData.UserId);
-    }
-  };
+  
 
   const configurationType = [
 
@@ -326,6 +320,49 @@ const handleDeleteAdmin = async (id) => {
 
 
   ]
+
+  const paymentMethodGridmenuItems = [
+    {
+      icon: <FaEdit />,
+      text: "Delete Payment",
+      type: "function",
+      onClick: (id) => {
+        handleDeleteAdmin(id); // Assuming this function is defined in your component
+      },
+      columnNames: ['id'] // Specify the column name for the ID here
+    },
+  
+  ];
+  
+  const DeliveryGridmenuItems = [
+    
+  
+  
+  ];
+  
+  
+  
+  
+   const paymentMethodGrid = [
+    { accessorKey: "id", header: "ID" },
+    { accessorKey: "PaymentMethod", header: "PaymentMethod" },
+    
+  ];
+  
+
+  const DeliveryConfigGrid = [
+    { accessorKey: "id", header: "ID" },
+    { accessorKey: "Location", header: "Location" },
+    { accessorKey: "PricePerKm", header: "PricePerKm" },
+  
+  ];
+  
+
+
+   const exploreMediaGrid = [
+    { accessorKey: "Picture", header: "Picture" }
+  ];
+  
 
 
 
@@ -447,28 +484,14 @@ const handleDeleteAdmin = async (id) => {
           </u>
         </span>
 
-        <GridComponent
-           id="gridcomp"
-      toolbar={['Search']}  // Add the search bar
- 
-          dataSource={ViewPaymentMethods}
-          enableHover={true}
-          allowPaging
-          allowSorting
-          allowExcelExport
-          allowPdfExport
-          contextMenuItems={contextMenuItems}
-          actionBegin={handleActionBegin}
-          style={{ backgroundColor: localStorage.getItem("colorMode") }}
-        >
-          <ColumnsDirective>
-            {paymentMethodGrid.map((item, index) => (
-              <ColumnDirective key={index} {...item} />
-            ))}
-          </ColumnsDirective>
-          <Inject services={[Resize, Sort, ContextMenu, Filter, Page, ExcelExport, Edit, PdfExport, Search, Toolbar]} />
+        <HydotTable 
+  columns={paymentMethodGrid} 
+  data={ViewPaymentMethods} 
+  media={exploreMediaGrid} 
+  colorMode={localStorage.getItem("colorMode")}
+  menuItems={paymentMethodGridmenuItems}
 
-        </GridComponent>
+/>
       </div>
      </>:<></>
 }
@@ -489,28 +512,14 @@ const handleDeleteAdmin = async (id) => {
           </u>
         </span>
 
-        <GridComponent
-           id="gridcomp"
-      toolbar={['Search']}  // Add the search bar
- 
-          dataSource={deliverConfigList}
-          enableHover={true}
-          allowPaging
-          allowSorting
-          allowExcelExport
-          allowPdfExport
-          contextMenuItems={contextMenuItems}
-          actionBegin={handleActionBegin}
-          style={{ backgroundColor: localStorage.getItem("colorMode") }}
-        >
-          <ColumnsDirective>
-            {DeliveryConfigGrid.map((item, index) => (
-              <ColumnDirective key={index} {...item} />
-            ))}
-          </ColumnsDirective>
-          <Inject services={[Resize, Sort, ContextMenu, Filter, Page, ExcelExport, Edit, PdfExport, Search, Toolbar]} />
+        <HydotTable 
+  columns={DeliveryConfigGrid} 
+  data={deliverConfigList} 
+  media={exploreMediaGrid} 
+  colorMode={localStorage.getItem("colorMode")}
+  menuItems={DeliveryGridmenuItems}
 
-        </GridComponent>
+/>
       </div>
      </>:<></>
 }

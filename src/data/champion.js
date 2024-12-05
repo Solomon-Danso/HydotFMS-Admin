@@ -1926,15 +1926,6 @@ export const links = [
           ]
         },
   
-        {
-          name: 'website',
-          icon: <FcGlobe />,
-          roles:[
-            {role: "Can_Configure_Website"}, 
-            {role: "SuperAdmin"}, 
-          
-          ]
-        },
   
         {
           name: 'configurations',
