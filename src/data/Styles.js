@@ -8,7 +8,7 @@ import { colors } from "../data/Colors";
 export const LoginPage = styled.div`
 
 padding: 7.5% 20%;
-height: 100vh;
+min-height: 100vh;
 background: url(${homepageBacg}) no-repeat center center
   fixed;
 -webkit-background-size: cover;
@@ -294,7 +294,7 @@ export const LoginDiv = styled.div`
   align-items: center;
   transition: all 0.5s ease-in-out;
   overflow: auto;
-  height:80vh;
+  height:100vh;
 
 
   @media (max-width: 768px) {
